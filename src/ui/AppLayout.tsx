@@ -1,0 +1,18 @@
+import { Outlet } from "react-router-dom";
+import Search from "../features/search/Search";
+import Navbar from "./Navbar";
+
+function AppLayout() {
+  return (
+    <div className="min-h-screen bg-darkBlue font-outfit text-white">
+      <div className="mx-auto grid max-w-[1500px] gap-9 p-8 sm:grid-cols-[1fr] sm:grid-rows-[1fr] lg:grid-cols-[6rem_1fr] lg:grid-rows-[auto_1fr]">
+        <Navbar />
+        <Search />
+        <main>
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
+}
+export default AppLayout;
