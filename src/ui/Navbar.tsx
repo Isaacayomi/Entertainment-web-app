@@ -77,7 +77,7 @@ function Navbar() {
           </svg>
         </NavLink>
         <NavLink
-          to="/bookmarked"
+          to="/bookmarks"
           className={({ isActive }) =>
             `${
               isActive ? "text-white" : "text-grayishBlue"
