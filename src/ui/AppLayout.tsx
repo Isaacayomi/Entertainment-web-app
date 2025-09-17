@@ -10,7 +10,7 @@ function AppLayout() {
       <div className="mx-auto grid max-w-[1300px] gap-9 p-8 sm:grid-cols-[1fr] sm:grid-rows-[1fr] lg:grid-cols-[6rem_1fr] lg:grid-rows-[auto_1fr]">
         <Navbar />
         <Search />
-        <main className="overflow-auto">
+        <main className="overflow-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <Outlet />
         </main>
       </div>

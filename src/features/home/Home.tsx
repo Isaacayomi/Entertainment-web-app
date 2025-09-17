@@ -1,23 +1,31 @@
 // import MySwiper from "../../ui/MySwiper";
+import { useQuery } from "@tanstack/react-query";
 import Heading from "../../ui/Heading";
 import MovieCard from "../../ui/MovieCard";
 import TrendingMovies from "./TrendingMovie";
+import { getAllMovies } from "../../services/apiAllMovies";
 
 function Home() {
+  const { data: allMovies, isPending } = useQuery({
+    queryKey: ["allMovies"],
+    queryFn: getAllMovies,
+  });
+
   return (
     <div className="h-screen">
       <Heading>Trending</Heading>
       <div className="flex pb-6">
-        {/* <MySwiper /> */}
-
         <TrendingMovies />
       </div>
 
       <Heading>Recommended for you</Heading>
+
+      {/* Spinner */}
+      {isPending && <p>Loading...</p>}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <MovieCard />
-        <MovieCard />
-        <MovieCard />
+        {allMovies?.map((movie) => {
+          return <MovieCard movie={movie} key={movie.id} />;
+        })}
       </div>
     </div>
   );
