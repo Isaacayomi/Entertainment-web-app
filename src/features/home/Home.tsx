@@ -16,7 +16,7 @@ function Home() {
     <div className="h-screen">
       {/* Spinner */}
       {isPending && <Spinner />}
-      
+
       <Heading>Trending</Heading>
       <div className="flex pb-6">
         <TrendingMovies />

@@ -1,8 +1,8 @@
 import MovieCard from "../../ui/MovieCard";
 import Heading from "../../ui/Heading";
 import { useQuery } from "@tanstack/react-query";
-import { getSeries } from "../../services/apiSeries";
 import Spinner from "../../ui/Spinner";
+import { getSeries } from "../../services/apiSeries";
 
 function Series() {
   const { data: series, isPending } = useQuery({

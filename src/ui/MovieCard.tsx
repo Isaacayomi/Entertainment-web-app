@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react";
 import Playicon from "./Playicon";
-import toast from "react-hot-toast";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateBookmark } from "../services/apiUpdateBookmark";
+import SpinnerMini from "./SpinnerMini";
+import { useBookmark } from "../hooks/useBookmark";
 
 type Thumbnail = {
   trending?: {
@@ -31,39 +29,9 @@ type MoviesProps = {
 };
 
 function MovieCard({ movie }: MoviesProps) {
-  const { title, year, category, rating, thumbnail, isBookmarked, id } = movie;
+  const { bookmarked, isPending, handleClick } = useBookmark(movie);
+  const { title, year, category, rating, thumbnail } = movie;
   const { regular } = thumbnail;
-
-  const [bookmarked, setBookmarked] = useState<boolean>(isBookmarked);
-
-  useEffect(() => {
-    setBookmarked(isBookmarked);
-  }, [isBookmarked]);
-
-  const queryClient = useQueryClient();
-  const { isPending, mutate } = useMutation({
-    mutationFn: updateBookmark,
-    onSuccess: (updatedMovie) => {
-      queryClient.invalidateQueries({ queryKey: ["bookmarkedMovies"] });
-      toast.success(
-        updatedMovie.isBookmarked
-          ? `${title} has been added to bookmarks`
-          : `${title} has been removed from bookmarks`,
-        { style: { fontSize: "0.875rem", textAlign: "center" } },
-      );
-    },
-    onError: (err: Error) => {
-      toast.error(`Something went wrong: ${err.message}`);
-      setBookmarked(isBookmarked);
-    },
-  });
-
-  function handleClick() {
-    const newValue = !bookmarked;
-    setBookmarked(newValue);
-
-    mutate({ newValue, id });
-  }
 
   return (
     <div className="mb-4 flex flex-col">
@@ -89,11 +57,17 @@ function MovieCard({ movie }: MoviesProps) {
           onClick={handleClick}
           className="opacity-[0.5006 ] absolute right-0 z-20 mr-[0.5rem] mt-[0.5rem] h-8 w-8 rounded-[2rem] bg-darkBlue md:mr-6"
         >
-          <img
-            src={`${bookmarked ? "./assets/icon-bookmark-full.svg" : "./assets/icon-bookmark-empty.svg"} `}
-            alt="Bookmark icon"
-            className="m-auto flex items-center justify-center py-[0.56rem]"
-          />
+          {isPending ? (
+            <div className="m-auto flex h-full items-center justify-center">
+              <SpinnerMini />
+            </div>
+          ) : (
+            <img
+              src={`${bookmarked ? "./assets/icon-bookmark-full.svg" : "./assets/icon-bookmark-empty.svg"} `}
+              alt="Bookmark icon"
+              className="m-auto flex items-center justify-center py-[0.56rem]"
+            />
+          )}
         </div>
       </div>
 
