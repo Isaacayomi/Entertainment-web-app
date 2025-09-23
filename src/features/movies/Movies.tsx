@@ -11,10 +11,9 @@ function Movies() {
   });
   return (
     <div className="h-screen">
-      <Heading>Movies</Heading>
-
       {isPending && <Spinner />}
 
+      <Heading>Movies</Heading>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {movies?.map((movie) => {
           return <MovieCard movie={movie} />;

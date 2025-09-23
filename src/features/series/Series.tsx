@@ -6,15 +6,18 @@ import Spinner from "../../ui/Spinner";
 
 function Series() {
   const { data: series, isPending } = useQuery({
-    queryKey: ["movies"],
+    queryKey: ["series"],
     queryFn: getSeries,
   });
+
+  const log = isPending;
+  console.log(log);
+
   return (
     <div className="h-screen">
-      <Heading>Series</Heading>
-
       {isPending && <Spinner />}
 
+      <Heading>Series</Heading>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {series?.map((serie) => {
           return <MovieCard movie={serie} />;

@@ -14,6 +14,9 @@ function Home() {
 
   return (
     <div className="h-screen">
+      {/* Spinner */}
+      {isPending && <Spinner />}
+      
       <Heading>Trending</Heading>
       <div className="flex pb-6">
         <TrendingMovies />
@@ -21,8 +24,6 @@ function Home() {
 
       <Heading>Recommended for you</Heading>
 
-      {/* Spinner */}
-      {isPending && <Spinner />}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {allMovies?.map((movie) => {
           return <MovieCard movie={movie} key={movie.id} />;

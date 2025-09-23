@@ -9,5 +9,6 @@ export async function getSeries() {
   if (error) {
     throw new Error(error.message);
   }
+  console.log(series);
   return series;
 }
