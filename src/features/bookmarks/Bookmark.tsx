@@ -20,6 +20,8 @@ function Bookmark() {
         {isBookmarked?.map((bookmarkedMovie) => {
           return <MovieCard movie={bookmarkedMovie} />;
         })}
+
+        {!isBookmarked?.length && <p>No bookmarked movies found.</p>}
       </div>
     </div>
   );

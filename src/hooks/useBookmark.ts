@@ -38,7 +38,11 @@ export function useBookmark(movie: Movie) {
   const { isPending, mutate } = useMutation({
     mutationFn: updateBookmark,
     onSuccess: (updatedMovie) => {
+      // invalidate queries basically lets the entire cache be refetched after a mutation has been made so that the UI is always in sync with the server
+      queryClient.invalidateQueries({ queryKey: ["trendingMovies"] });
+      queryClient.invalidateQueries({ queryKey: ["allMovies"] });
       queryClient.invalidateQueries({ queryKey: ["bookmarkedMovies"] });
+
       toast.success(
         updatedMovie.isBookmarked
           ? `${title} has been added to bookmarks`

@@ -1,8 +1,9 @@
+import SpinnerMini from "../../ui/SpinnerMini";
 import { useBookmark } from "../../hooks/useBookmark";
 import Playicon from "../../ui/Playicon";
 
 function TrendingMovieCard({ movie }) {
-  const { bookmarked, handleClick } = useBookmark(movie);
+  const { bookmarked, handleClick, isPending } = useBookmark(movie);
 
   return (
     <div
@@ -25,15 +26,21 @@ function TrendingMovieCard({ movie }) {
           onClick={handleClick}
           className="absolute right-0 z-20 mr-[0.56rem] mt-[0.5rem] h-8 w-8 rounded-[2rem] bg-darkBlue md:mr-6"
         >
-          <img
-            src={
-              bookmarked
-                ? "./assets/icon-bookmark-full.svg"
-                : "./assets/icon-bookmark-empty.svg"
-            }
-            alt="Bookmark icon"
-            className="m-auto flex items-center justify-center py-[0.56rem]"
-          />
+          {isPending ? (
+            <div className="m-auto flex h-full items-center justify-center">
+              <SpinnerMini />
+            </div>
+          ) : (
+            <img
+              src={
+                bookmarked
+                  ? "./assets/icon-bookmark-full.svg"
+                  : "./assets/icon-bookmark-empty.svg"
+              }
+              alt="Bookmark icon"
+              className="m-auto flex items-center justify-center py-[0.56rem]"
+            />
+          )}
         </div>
 
         {/* Meta info */}
