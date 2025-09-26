@@ -1,9 +1,9 @@
+import { useMoviesContext } from "../../context/useMoviesContext";
+import { useHomeMovies } from "../../hooks/useHomeMovies";
 import Heading from "../../ui/Heading";
 import MovieCard from "../../ui/MovieCard";
 import TrendingMovies from "./TrendingMovie";
 import Spinner from "../../ui/Spinner";
-import { useMoviesContext } from "../../context/useMoviesContext";
-import { useHomeMovies } from "../../hooks/useHomeMovies";
 
 function Home() {
   const { allMovies, isPending } = useHomeMovies();

@@ -1,7 +1,7 @@
-import SpinnerMini from "../../ui/SpinnerMini";
-import { useBookmark } from "../../hooks/useBookmark";
-import Playicon from "../../ui/Playicon";
 import { Movie } from "types";
+import { useBookmark } from "../../hooks/useBookmark";
+import SpinnerMini from "../../ui/SpinnerMini";
+import Playicon from "../../ui/Playicon";
 
 type TrendingMovieCardProps = {
   movie: Movie;

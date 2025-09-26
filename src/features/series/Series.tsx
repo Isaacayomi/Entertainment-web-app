@@ -1,8 +1,8 @@
+import { useSeries } from "../../hooks/useSeries";
+import { useMoviesContext } from "../../context/useMoviesContext";
 import MovieCard from "../../ui/MovieCard";
 import Heading from "../../ui/Heading";
 import Spinner from "../../ui/Spinner";
-import { useMoviesContext } from "../../context/useMoviesContext";
-import { useSeries } from "../../hooks/useSeries";
 
 function Series() {
   const { series, isPending } = useSeries();

@@ -1,8 +1,8 @@
+import { useMovies } from "../../hooks/useMovies";
+import { useMoviesContext } from "../../context/useMoviesContext";
 import Heading from "../../ui/Heading";
 import MovieCard from "../../ui/MovieCard";
 import Spinner from "../../ui/Spinner";
-import { useMoviesContext } from "../../context/useMoviesContext";
-import { useMovies } from "../../hooks/useMovies";
 
 function Movies() {
   const { movies, isPending } = useMovies();

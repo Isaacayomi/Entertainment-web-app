@@ -1,9 +1,9 @@
+import { useQuery } from "@tanstack/react-query";
+import { getBookmark } from "../../services/apiBookmark";
+import { useMoviesContext } from "../../context/useMoviesContext";
 import MovieCard from "../../ui/MovieCard";
 import Heading from "../../ui/Heading";
-import { getBookmark } from "../../services/apiBookmark";
-import { useQuery } from "@tanstack/react-query";
 import Spinner from "../../ui/Spinner";
-import { useMoviesContext } from "../../context/useMoviesContext";
 
 function Bookmark() {
   const { data: isBookmarked, isPending } = useQuery({

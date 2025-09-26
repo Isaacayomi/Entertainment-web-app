@@ -1,6 +1,6 @@
-import { useMoviesContext } from "../../context/useMoviesContext";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useMoviesContext } from "../../context/useMoviesContext";
 
 function Search() {
   const [holder, setHolder] = useState<string>("");
