@@ -1,17 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
 import Heading from "../../ui/Heading";
 import MovieCard from "../../ui/MovieCard";
 import TrendingMovies from "./TrendingMovie";
-import { getAllMovies } from "../../services/apiAllMovies";
 import Spinner from "../../ui/Spinner";
-import { useMovies } from "../../context/useMovies";
+import { useMoviesContext } from "../../context/useMoviesContext";
+import { useHomeMovies } from "../../hooks/useHomeMovies";
 
 function Home() {
-  const { data: allMovies, isPending } = useQuery({
-    queryKey: ["allMovies"],
-    queryFn: getAllMovies,
-  });
-  const { baseMovies, searchQuery } = useMovies();
+  const { allMovies, isPending } = useHomeMovies();
+  const { baseMovies, searchQuery } = useMoviesContext();
 
   const displayedMovies = searchQuery
     ? baseMovies.filter((movie) =>

@@ -1,16 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
-import { getTrendingMovies } from "../../services/apiTrendingMovies";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, FreeMode } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/free-mode";
 import TrendingMovieCard from "./TrendingMovieCard";
+import { useTrendingMovies } from "../../hooks/useTrendingMovie";
 
 function TrendingMovie() {
-  const { data: trendingMovies, isPending } = useQuery({
-    queryKey: ["trendingMovies"],
-    queryFn: getTrendingMovies,
-  });
+  const { trendingMovies, isPending } = useTrendingMovies();
 
   if (isPending) return <p className="text-white">Loading...</p>;
 

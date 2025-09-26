@@ -1,26 +1,33 @@
 import MovieCard from "../../ui/MovieCard";
 import Heading from "../../ui/Heading";
-import { useQuery } from "@tanstack/react-query";
 import Spinner from "../../ui/Spinner";
-import { getSeries } from "../../services/apiSeries";
+import { useMoviesContext } from "../../context/useMoviesContext";
+import { useSeries } from "../../hooks/useSeries";
 
 function Series() {
-  const { data: series, isPending } = useQuery({
-    queryKey: ["series"],
-    queryFn: getSeries,
-  });
+  const { series, isPending } = useSeries();
 
-  const log = isPending;
-  console.log(log);
+  const { baseMovies, searchQuery } = useMoviesContext();
+
+  const displayedMovies = searchQuery
+    ? baseMovies.filter((movie) =>
+        movie.title.toLowerCase().includes(searchQuery.toLowerCase()),
+      )
+    : series;
 
   return (
     <div className="h-screen">
       {isPending && <Spinner />}
 
       <Heading>Series</Heading>
+
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {series?.map((serie) => {
-          return <MovieCard movie={serie} />;
+        {(displayedMovies && displayedMovies.length) === 0 && (
+          <p>No results found</p>
+        )}
+
+        {displayedMovies?.map((serie) => {
+          return <MovieCard movie={serie} key={serie.id} />;
         })}
       </div>
     </div>

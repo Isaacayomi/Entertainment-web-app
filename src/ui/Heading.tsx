@@ -1,6 +1,4 @@
-type HeadingProp = {
-  children: React.ReactNode;
-};
+import { HeadingProp } from "types";
 
 function Heading({ children }: HeadingProp) {
   return (

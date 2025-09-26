@@ -1,4 +1,4 @@
-import { useMovies } from "../../context/useMovies";
+import { useMoviesContext } from "../../context/useMoviesContext";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -12,7 +12,7 @@ function Search() {
     bookmarked,
     allMovies,
     setBaseMovies,
-  } = useMovies();
+  } = useMoviesContext();
   const location = useLocation();
   const navigation = location.pathname;
 

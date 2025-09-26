@@ -1,10 +1,10 @@
 import { createContext, useEffect, useState } from "react";
 import { getAllMovies } from "../services/apiAllMovies";
-
-type Movie = {
-  category: string;
-  isBookmarked: boolean;
-};
+import { useLocation } from "react-router-dom";
+import { getMovies } from "../services/apiMovies";
+import { getSeries } from "../services/apiSeries";
+import { getBookmark } from "../services/apiBookmark";
+import { Movie } from "types";
 
 type MovieContextType = {
   baseMovies: Movie[];
@@ -24,6 +24,9 @@ type ProviderProps = {
 const MovieContext = createContext<MovieContextType | undefined>(undefined);
 
 function MovieProvider({ children }: ProviderProps) {
+  const location = useLocation();
+  const navigation = location.pathname;
+
   const [allMovies, setAllMovies] = useState<Movie[]>([]);
   const [movies, setMovies] = useState<Movie[]>([]);
   const [baseMovies, setBaseMovies] = useState<Movie[]>([]);
@@ -34,16 +37,23 @@ function MovieProvider({ children }: ProviderProps) {
 
   useEffect(() => {
     async function fetchMovies() {
-      const data = await getAllMovies();
+      const data =
+        navigation === "/"
+          ? await getAllMovies()
+          : navigation === "/movies"
+            ? await getMovies()
+            : navigation === "/series"
+              ? await getSeries()
+              : await getBookmark();
 
       setAllMovies(data);
-      setMovies(data.filter((movie: Movie) => movie.category === "Movie"));
-      setSeries(data.filter((movie: Movie) => movie.category === "TV Series"));
-      setBookmarked(data.filter((movie: Movie) => movie.isBookmarked));
+      setSeries(data);
+      setMovies(data);
+      setBookmarked(data);
     }
 
     fetchMovies();
-  }, []);
+  }, [navigation]);
 
   return (
     <MovieContext.Provider

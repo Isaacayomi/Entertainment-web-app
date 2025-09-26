@@ -1,23 +1,32 @@
-import { useQuery } from "@tanstack/react-query";
 import Heading from "../../ui/Heading";
 import MovieCard from "../../ui/MovieCard";
-// import { getMovies } from "../../services/apiMovies";
 import Spinner from "../../ui/Spinner";
-import { getMovies } from "../../services/apiMovies";
+import { useMoviesContext } from "../../context/useMoviesContext";
+import { useMovies } from "../../hooks/useMovies";
 
 function Movies() {
-  const { data: movies, isPending } = useQuery({
-    queryKey: ["movies"],
-    queryFn: getMovies,
-  });
+  const { movies, isPending } = useMovies();
+
+  const { movies: contextMovies, searchQuery } = useMoviesContext();
+
+  const displayedMovies = searchQuery
+    ? contextMovies.filter((movie) =>
+        movie.title.toLowerCase().includes(searchQuery.toLowerCase()),
+      )
+    : movies;
+
   return (
     <div className="h-screen">
       {isPending && <Spinner />}
 
       <Heading>Movies</Heading>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {movies?.map((movie) => {
-          return <MovieCard movie={movie} />;
+        {(displayedMovies && displayedMovies.length) === 0 && (
+          <p>No results found</p>
+        )}
+
+        {displayedMovies?.map((movie) => {
+          return <MovieCard movie={movie} key={movie.id} />;
         })}
       </div>
     </div>

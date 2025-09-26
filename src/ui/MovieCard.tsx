@@ -1,32 +1,7 @@
 import Playicon from "./Playicon";
 import SpinnerMini from "./SpinnerMini";
 import { useBookmark } from "../hooks/useBookmark";
-
-type Thumbnail = {
-  trending?: {
-    small: string;
-    large: string;
-  };
-  regular: {
-    small: string;
-    medium: string;
-    large: string;
-  };
-};
-
-type Movie = {
-  id: number;
-  title: string;
-  year: number;
-  rating: string;
-  category: string;
-  thumbnail: Thumbnail;
-  isBookmarked: boolean;
-};
-
-type MoviesProps = {
-  movie: Movie;
-};
+import { MoviesProps } from "types";
 
 function MovieCard({ movie }: MoviesProps) {
   const { bookmarked, isPending, handleClick } = useBookmark(movie);

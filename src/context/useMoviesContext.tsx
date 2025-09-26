@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { MovieContext } from "./MovieContext";
 
-function useMovies() {
+function useMoviesContext() {
   const context = useContext(MovieContext);
   if (context === undefined) {
     throw new Error("useMovies must be used within a MovieProvider");
@@ -9,4 +9,4 @@ function useMovies() {
   return context;
 }
 
-export { useMovies };
+export { useMoviesContext };

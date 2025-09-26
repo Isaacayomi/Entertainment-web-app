@@ -1,8 +1,13 @@
 import SpinnerMini from "../../ui/SpinnerMini";
 import { useBookmark } from "../../hooks/useBookmark";
 import Playicon from "../../ui/Playicon";
+import { Movie } from "types";
 
-function TrendingMovieCard({ movie }) {
+type TrendingMovieCardProps = {
+  movie: Movie;
+};
+
+function TrendingMovieCard({ movie }: TrendingMovieCardProps) {
   const { bookmarked, handleClick, isPending } = useBookmark(movie);
 
   return (
