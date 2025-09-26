@@ -9,31 +9,33 @@ function Home() {
   const { allMovies, isPending } = useHomeMovies();
   const { baseMovies, searchQuery } = useMoviesContext();
 
-  const displayedMovies = searchQuery
+  const normalizedQuery = searchQuery?.trim().toLowerCase() || "";
+
+  const displayedMovies = normalizedQuery
     ? baseMovies.filter((movie) =>
-        movie.title.toLowerCase().includes(searchQuery.toLowerCase()),
+        movie.title.toLowerCase().includes(normalizedQuery),
       )
     : allMovies;
 
   return (
     <div className="h-screen">
-      {/* Spinner */}
       {isPending && <Spinner />}
 
-      <Heading>Trending</Heading>
-      <div className="flex pb-6">
-        <TrendingMovies />
-      </div>
+      {!searchQuery?.trim() && (
+        <>
+          <Heading>Trending</Heading>
+          <div className="flex pb-6">
+            <TrendingMovies />
+          </div>
+        </>
+      )}
 
-      <Heading>Recommended for you</Heading>
-
+      <Heading>{`${normalizedQuery ? `Showing ${displayedMovies?.length} results for "${searchQuery}"` : "Recommended for you"}`}</Heading>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {(displayedMovies && displayedMovies.length) === 0 && (
-          <p>No results found</p>
-        )}
-        {displayedMovies?.map((movie) => {
-          return <MovieCard movie={movie} key={movie.id} />;
-        })}
+        {displayedMovies?.length === 0 && <p>No results found</p>}
+        {displayedMovies?.map((movie) => (
+          <MovieCard movie={movie} key={movie.id} />
+        ))}
       </div>
     </div>
   );

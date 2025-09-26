@@ -6,12 +6,13 @@ import Spinner from "../../ui/Spinner";
 
 function Movies() {
   const { movies, isPending } = useMovies();
-
   const { movies: contextMovies, searchQuery } = useMoviesContext();
 
-  const displayedMovies = searchQuery
+  const normalizedQuery = searchQuery?.trim().toLowerCase() || "";
+
+  const displayedMovies = normalizedQuery
     ? contextMovies.filter((movie) =>
-        movie.title.toLowerCase().includes(searchQuery.toLowerCase()),
+        movie.title.toLowerCase().includes(normalizedQuery),
       )
     : movies;
 
@@ -19,17 +20,20 @@ function Movies() {
     <div className="h-screen">
       {isPending && <Spinner />}
 
-      <Heading>Movies</Heading>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {(displayedMovies && displayedMovies.length) === 0 && (
-          <p>No results found</p>
-        )}
+      {!searchQuery ? (
+        <Heading>Movies</Heading>
+      ) : (
+        <Heading>{`${normalizedQuery ? `Showing ${displayedMovies?.length} results for "${searchQuery}"` : "Movies"}`}</Heading>
+      )}
 
-        {displayedMovies?.map((movie) => {
-          return <MovieCard movie={movie} key={movie.id} />;
-        })}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {displayedMovies?.length === 0 && <p>No results found</p>}
+        {displayedMovies?.map((movie) => (
+          <MovieCard movie={movie} key={movie.id} />
+        ))}
       </div>
     </div>
   );
 }
+
 export default Movies;

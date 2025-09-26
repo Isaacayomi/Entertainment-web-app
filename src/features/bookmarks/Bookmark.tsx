@@ -13,17 +13,22 @@ function Bookmark() {
 
   const { movies: contextMovies, searchQuery } = useMoviesContext();
 
-  const displayedMovies = searchQuery
+  const normalizedQuery = searchQuery?.trim().toLowerCase() || "";
+
+  const displayedMovies = normalizedQuery
     ? contextMovies.filter((movie) =>
-        movie.title.toLowerCase().includes(searchQuery.toLowerCase()),
+        movie.title.toLowerCase().includes(normalizedQuery),
       )
     : isBookmarked;
 
   return (
     <div className="h-screen">
       {isPending && <Spinner />}
-      <Heading>Bookmarked Series & Movies</Heading>
-
+      {!searchQuery ? (
+        <Heading>Bookmarked TV Series and Movies</Heading>
+      ) : (
+        <Heading>{`${normalizedQuery ? `Showing ${displayedMovies?.length} results for "${searchQuery}"` : "Bookmarked TV Series and Movies"}`}</Heading>
+      )}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {displayedMovies?.map((bookmarkedMovie) => {
           return <MovieCard movie={bookmarkedMovie} key={bookmarkedMovie.id} />;
