@@ -30,7 +30,7 @@ function Home() {
         </>
       )}
 
-      <Heading>{`${normalizedQuery ? `Showing ${displayedMovies?.length} results for "${searchQuery}"` : "Recommended for you"}`}</Heading>
+      <Heading>{`${normalizedQuery ? `Found ${displayedMovies?.length} results for "${searchQuery}"` : "Recommended for you"}`}</Heading>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {displayedMovies?.length === 0 && <p>No results found</p>}
         {displayedMovies?.map((movie) => (

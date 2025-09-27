@@ -43,7 +43,7 @@ function Search() {
         setHolder("Search for TV series");
       } else {
         setSearchQuery("");
-        setHolder("Search for Bookmarked Movies/Tv Shows");
+        setHolder("Search for Bookmarked Shows");
       }
     },
     [navigation, setSearchQuery],

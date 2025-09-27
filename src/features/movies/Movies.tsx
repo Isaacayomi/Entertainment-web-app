@@ -23,7 +23,7 @@ function Movies() {
       {!searchQuery ? (
         <Heading>Movies</Heading>
       ) : (
-        <Heading>{`${normalizedQuery ? `Showing ${displayedMovies?.length} results for "${searchQuery}"` : "Movies"}`}</Heading>
+        <Heading>{`${normalizedQuery ? `Found ${displayedMovies?.length} results for "${searchQuery}"` : "Movies"}`}</Heading>
       )}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
