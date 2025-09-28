@@ -28,6 +28,10 @@ export type HeadingProp = {
   children: React.ReactNode;
 };
 
+export type ButtonProp = {
+  children: React.ReactNode;
+};
+
 export type PlayIconProps = {
   className: string;
 };

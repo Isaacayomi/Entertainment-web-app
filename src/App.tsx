@@ -7,6 +7,8 @@ import AppLayout from "./ui/AppLayout";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import PageNotFound from "./ui/PageNotFound";
+import Login from "./features/authentication/Login";
+import SignUp from "./features/authentication/SignUp";
 
 function App() {
   const queryClient = new QueryClient({
@@ -28,6 +30,8 @@ function App() {
             <Route element={<Series />} path="series" />
             <Route element={<Bookmark />} path="bookmarks" />
           </Route>
+          <Route element={<Login />} path="login" />
+          <Route element={<SignUp />} path="signup" />
           <Route element={<PageNotFound />} path="*" />
         </Routes>
       </BrowserRouter>
