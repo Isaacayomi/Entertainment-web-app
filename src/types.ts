@@ -40,4 +40,5 @@ export type AuthProps = {
   email: string;
   password: string;
   confirmPassword?: string;
+  message?: string;
 };

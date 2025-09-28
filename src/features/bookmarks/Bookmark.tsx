@@ -39,15 +39,10 @@ function Bookmark() {
               <MovieCard movie={bookmarkedMovie} key={bookmarkedMovie.id} />
             );
           })}
-
-        {!displayedMovies?.length && <p>No bookmarked tv series found.</p>}
       </div>
 
-      {!searchQuery ? (
-        <Heading>Bookmarked Movie</Heading>
-      ) : (
-        <Heading>{`${normalizedQuery ? `Found ${displayedMovies?.length} results for "${searchQuery}"` : "Bookmarked TV Series and Movies"}`}</Heading>
-      )}
+      {!searchQuery && <Heading>Bookmarked Movie</Heading>}
+
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {displayedMovies
           ?.filter((bookmarkedMovie) => bookmarkedMovie.category === "movie")
@@ -56,8 +51,6 @@ function Bookmark() {
               <MovieCard movie={bookmarkedMovie} key={bookmarkedMovie.id} />
             );
           })}
-
-        {!displayedMovies?.length && <p>No bookmarked movies found.</p>}
       </div>
     </div>
   );
