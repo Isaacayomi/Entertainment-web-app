@@ -11,15 +11,12 @@ export async function updateBookmark({
     .from("catalog")
     .update({ isBookmarked: newValue })
     .eq("id", id)
-    .select("id, isBookmarked"); // only what we need
-
+    .select("id, isBookmarked");
   if (error) throw new Error(error.message);
 
   if (!data || data.length === 0) {
-    // helpful debug message if nothing matched
     throw new Error("No row updated (check id / RLS / permissions)");
   }
 
   return data[0];
-  // return { id, newValue };
 }

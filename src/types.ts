@@ -35,3 +35,9 @@ export type ButtonProp = {
 export type PlayIconProps = {
   className: string;
 };
+
+export type AuthProps = {
+  email: string;
+  password: string;
+  confirmPassword?: string;
+};
