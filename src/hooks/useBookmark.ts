@@ -2,28 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { updateBookmark } from "../services/apiUpdateBookmark";
 import toast from "react-hot-toast";
-
-type Thumbnail = {
-  trending?: {
-    small: string;
-    large: string;
-  };
-  regular: {
-    small: string;
-    medium: string;
-    large: string;
-  };
-};
-
-type Movie = {
-  id: number;
-  title: string;
-  year: number;
-  rating: string;
-  category: string;
-  thumbnail: Thumbnail;
-  isBookmarked: boolean;
-};
+import { Movie } from "types";
 
 export function useBookmark(movie: Movie) {
   const { title, isBookmarked, id } = movie;

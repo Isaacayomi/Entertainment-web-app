@@ -17,7 +17,7 @@ function MovieCard({ movie }: MoviesProps) {
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
         }}
-        className="group relative z-10 h-[8.75rem] w-full rounded-lg bg-cover bg-no-repeat object-contain md:h-[10.875rem] md:cursor-pointer lg:bg-contain"
+        className="group relative z-10 aspect-[16/9] w-full rounded-lg bg-cover bg-no-repeat md:cursor-pointer"
       >
         {/* Black overlay */}
         <div className="absolute inset-0 z-0 bg-black opacity-0 transition duration-300 group-hover:opacity-50"></div>
