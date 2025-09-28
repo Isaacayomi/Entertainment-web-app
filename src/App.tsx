@@ -6,6 +6,7 @@ import Bookmark from "./features/bookmarks/Bookmark";
 import AppLayout from "./ui/AppLayout";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import PageNotFound from "./ui/PageNotFound";
 
 function App() {
   const queryClient = new QueryClient({
@@ -27,6 +28,7 @@ function App() {
             <Route element={<Series />} path="series" />
             <Route element={<Bookmark />} path="bookmarks" />
           </Route>
+          <Route element={<PageNotFound />} path="*" />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>
