@@ -12,7 +12,7 @@ function Login() {
   const { handleSubmit, register, formState, reset } = useForm<AuthProps>();
   // console.log(formState);
   const { errors } = formState;
-  const { login, isPending, error: loginError } = useLogin();
+  const { login, isPending } = useLogin();
 
   function onSubmit({ email, password }: AuthProps) {
     // console.log(data);
@@ -56,10 +56,6 @@ function Login() {
             })}
           />
 
-          {loginError && (
-            <ErrorMessage>{(loginError as Error).message}</ErrorMessage>
-          )}
-
           {errors?.email && (
             <ErrorMessage>{errors?.email?.message}</ErrorMessage>
           )}
@@ -81,10 +77,6 @@ function Login() {
               },
             })}
           />
-
-          {loginError && (
-            <ErrorMessage>{(loginError as Error).message}</ErrorMessage>
-          )}
 
           {errors?.password && (
             <ErrorMessage>{errors?.password?.message}</ErrorMessage>
