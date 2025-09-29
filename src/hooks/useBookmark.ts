@@ -1,7 +1,7 @@
+import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { updateBookmark } from "../services/apiUpdateBookmark";
-import toast from "react-hot-toast";
 import { Movie } from "types";
 
 export function useBookmark(movie: Movie) {

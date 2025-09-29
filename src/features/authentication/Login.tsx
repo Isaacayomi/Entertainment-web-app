@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
-import AuthPrompt from "../../ui/AuthPrompt";
-import Button from "../../ui/Button";
-import ErrorMessage from "../../ui/ErrorMessage";
 import { useForm } from "react-hook-form";
 import { useLogin } from "../../hooks/useLogin";
 import { AuthProps } from "types";
+
+import AuthPrompt from "../../ui/AuthPrompt";
+import ErrorMessage from "../../ui/ErrorMessage";
+import Button from "../../ui/Button";
 import SpinnerMini from "../../ui/SpinnerMini";
 
 function Login() {
@@ -43,7 +44,7 @@ function Login() {
             placeholder="Email address"
             className="w-full bg-transparent pb-[1.13rem] text-white focus:outline-none"
             aria-invalid={errors.email ? "true" : "false"}
-            // defaultValue="test@example.com"
+            defaultValue="test@example.com"
             {...register("email", {
               required: "This field cannot be empty",
               setValueAs: (value) => value.trim(), // to trim spaces
@@ -54,9 +55,10 @@ function Login() {
               },
             })}
           />
-          {/* {loginError && (
+
+          {loginError && (
             <ErrorMessage>{(loginError as Error).message}</ErrorMessage>
-          )} */}
+          )}
 
           {errors?.email && (
             <ErrorMessage>{errors?.email?.message}</ErrorMessage>
@@ -69,16 +71,21 @@ function Login() {
             placeholder="Password"
             className="w-full bg-transparent pb-[1.13rem] text-white focus:outline-none"
             aria-invalid={errors.password ? "true" : "false"}
-            // defaultValue="test@123"
+            defaultValue="test@123"
             {...register("password", {
               required: "This field cannot be empty",
               setValueAs: (value) => value.trim(),
               minLength: {
-                value: 5,
-                message: "Password must be at least 5 characters",
+                value: 8,
+                message: "Password must be at least 8 characters",
               },
             })}
           />
+
+          {loginError && (
+            <ErrorMessage>{(loginError as Error).message}</ErrorMessage>
+          )}
+
           {errors?.password && (
             <ErrorMessage>{errors?.password?.message}</ErrorMessage>
           )}
@@ -87,7 +94,7 @@ function Login() {
         <Button>{isPending ? <SpinnerMini /> : "Login to your account"}</Button>
         <AuthPrompt>
           Don't have an account?
-          <Link to="/signup">
+          <Link to="/sign-up">
             <span className="cursor-pointer text-red">Sign up</span>
           </Link>
         </AuthPrompt>

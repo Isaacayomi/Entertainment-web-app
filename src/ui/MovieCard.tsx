@@ -1,7 +1,8 @@
-import Playicon from "./Playicon";
-import SpinnerMini from "./SpinnerMini";
 import { useBookmark } from "../hooks/useBookmark";
 import { MoviesProps } from "types";
+
+import Playicon from "./Playicon";
+import SpinnerMini from "./SpinnerMini";
 
 function MovieCard({ movie }: MoviesProps) {
   const { bookmarked, isPending, handleClick } = useBookmark(movie);

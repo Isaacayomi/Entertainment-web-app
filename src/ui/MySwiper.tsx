@@ -1,6 +1,6 @@
+import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperClass } from "swiper";
-import "swiper/css";
 
 import TrendingMovie from "../features/home/TrendingMovie";
 
