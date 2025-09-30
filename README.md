@@ -1,32 +1,39 @@
 # Entertainment Web App 🎬
 
 ## Overview
+
 This project is a modern, responsive entertainment web application built with React and TypeScript, leveraging Supabase for backend services including authentication and data storage. Users can browse a wide variety of movies and TV series, discover trending content, and manage their personal bookmarks.
 
 ## Features
-*   **User Authentication**: Secure sign-up and login functionality powered by Supabase Auth.
-*   **Content Browsing**: Explore an extensive catalog of movies and TV series categorized for easy navigation.
-*   **Trending Section**: Stay updated with the most popular and currently trending entertainment.
-*   **Search Functionality**: Efficiently search for specific titles across the entire content library.
-*   **Bookmark Management**: Easily bookmark favorite movies and TV series for quick access later.
-*   **Responsive Design**: A seamless user experience across various devices and screen sizes, implemented with Tailwind CSS.
-*   **Robust Data Fetching**: Utilizes React Query for efficient data management, caching, and state synchronization.
+
+- **User Authentication**: Secure sign-up and login functionality powered by Supabase Auth.
+- **Content Browsing**: Explore an extensive catalog of movies and TV series categorized for easy navigation.
+- **Trending Section**: Stay updated with the most popular and currently trending entertainment.
+- **Search Functionality**: Efficiently search for specific titles across the entire content library.
+- **Bookmark Management**: Easily bookmark favorite movies and TV series for quick access later.
+- **Responsive Design**: A seamless user experience across various devices and screen sizes, implemented with Tailwind CSS.
+- **Robust Data Fetching**: Utilizes React Query for efficient data management, caching, and state synchronization.
 
 ## Getting Started
+
 To get this project up and running on your local machine, follow these simple steps.
 
 ### Installation
+
 🚀 **Clone the Repository:**
+
 ```bash
 git clone https://github.com/Isaacayomi/Entertainment-web-app.git
 ```
 
 📦 **Navigate to Project Directory:**
+
 ```bash
 cd entertainment-web-app
 ```
 
 ⚙️ **Install Dependencies:**
+
 ```bash
 npm install
 # or
@@ -34,6 +41,7 @@ yarn install
 ```
 
 ### Environment Variables
+
 This project uses Supabase for its backend services. You'll need to configure your Supabase project URL and public API key.
 
 Create a `.env` file in the root of your project and add the following variables:
@@ -43,12 +51,13 @@ VITE_SUPABASE_URL="YOUR_SUPABASE_PROJECT_URL"
 VITE_SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY"
 ```
 
-*   `VITE_SUPABASE_URL`: Your Supabase project URL (e.g., `https://abcdefg1234.supabase.co`).
-*   `VITE_SUPABASE_ANON_KEY`: Your Supabase public "anon" key.
+- `VITE_SUPABASE_URL`: Your Supabase project URL (e.g., `https://abcdefg1234.supabase.co`).
+- `VITE_SUPABASE_ANON_KEY`: Your Supabase public "anon" key.
 
 **Note**: Ensure your Supabase `catalog` table is set up with appropriate RLS (Row Level Security) policies to allow authenticated users to read and update `isBookmarked` status. Also, set up authentication via email/password in your Supabase project.
 
 ### Running the Application
+
 Once the dependencies are installed and environment variables are set, you can start the development server:
 
 ```bash
@@ -60,6 +69,7 @@ yarn dev
 The application will typically be available at `http://localhost:5173`.
 
 ## Usage
+
 Upon launching the application, you will be greeted by the login/sign-up page.
 
 1.  **Sign Up**: If you are a new user, navigate to the "Sign up" page, provide your email and password to create an account.
@@ -71,21 +81,22 @@ Upon launching the application, you will be greeted by the login/sign-up page.
 
 ## Technologies Used
 
-| Technology         | Description                                     |
-| :----------------- | :---------------------------------------------- |
-| **React**          | A JavaScript library for building user interfaces |
-| **TypeScript**     | A typed superset of JavaScript that compiles to plain JavaScript |
-| **Vite**           | A fast build tool for modern web projects         |
-| **Tailwind CSS**   | A utility-first CSS framework for rapid UI development |
-| **Supabase**       | Open-source Firebase alternative for backend services (Auth, Database) |
-| **React Query**    | Powerful asynchronous state management for React |
-| **React Router DOM** | Declarative routing for React applications     |
-| **React Hook Form**| Performant and flexible forms with easy validation |
-| **Swiper**         | Modern touch slider for carousels and galleries   |
-| **ESLint**         | Pluggable JavaScript linter for code quality     |
-| **Prettier**       | Opinionated code formatter                        |
+| Technology           | Description                                                            |
+| :------------------- | :--------------------------------------------------------------------- |
+| **React**            | A JavaScript library for building user interfaces                      |
+| **TypeScript**       | A typed superset of JavaScript that compiles to plain JavaScript       |
+| **Vite**             | A fast build tool for modern web projects                              |
+| **Tailwind CSS**     | A utility-first CSS framework for rapid UI development                 |
+| **Supabase**         | Open-source Firebase alternative for backend services (Auth, Database) |
+| **React Query**      | Powerful asynchronous state management for React                       |
+| **React Router DOM** | Declarative routing for React applications                             |
+| **React Hook Form**  | Performant and flexible forms with easy validation                     |
+| **Swiper**           | Modern touch slider for carousels and galleries                        |
+| **ESLint**           | Pluggable JavaScript linter for code quality                           |
+| **Prettier**         | Opinionated code formatter                                             |
 
 ## Contributing
+
 We welcome contributions to enhance this entertainment web app! If you're looking to contribute, please follow these guidelines:
 
 1.  🍴 **Fork the repository.**
@@ -98,10 +109,11 @@ We welcome contributions to enhance this entertainment web app! If you're lookin
 8.  🤝 **Open a Pull Request** to the `main` branch of the original repository. Provide a detailed description of your changes.
 
 ## Author Info
+
 **Isaacayomi**
-*   LinkedIn: [Your_LinkedIn_Profile]
-*   Twitter: [Your_Twitter_Handle]
-*   Portfolio: [Your_Portfolio_Website]
+
+- LinkedIn: [https://www.linkedin.com/in/isaac-ayomide-okunlola-3568b7275/]
+- Twitter: [https://x.com/_devPRIME]
 
 ---
 
