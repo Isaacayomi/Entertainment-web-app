@@ -95,19 +95,6 @@ Upon launching the application, you will be greeted by the login/sign-up page.
 | **ESLint**           | Pluggable JavaScript linter for code quality                           |
 | **Prettier**         | Opinionated code formatter                                             |
 
-## Contributing
-
-We welcome contributions to enhance this entertainment web app! If you're looking to contribute, please follow these guidelines:
-
-1.  🍴 **Fork the repository.**
-2.  ✨ **Clone your forked repository** to your local machine.
-3.  🌿 **Create a new branch** for your feature or bug fix: `git checkout -b feature/your-feature-name` or `git checkout -b bugfix/issue-description`.
-4.  💻 **Make your changes**, ensuring they adhere to the project's coding style and standards.
-5.  🧪 **Write and run tests** (if applicable) to ensure your changes work as expected and don't introduce regressions.
-6.  💾 **Commit your changes** with a clear and concise message: `git commit -m "feat: Add new feature"`.
-7.  ⬆️ **Push your changes** to your forked repository: `git push origin feature/your-feature-name`.
-8.  🤝 **Open a Pull Request** to the `main` branch of the original repository. Provide a detailed description of your changes.
-
 ## Author Info
 
 **Isaacayomi**
