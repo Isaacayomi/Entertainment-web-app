@@ -223,7 +223,7 @@ function DetailPage() {
               }`}
               src={heroVideoUrl}
               title={title}
-              allow="autoplay"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               onLoad={() => {
                 setTrailerReady(true);
                 setTimeout(() => {
