@@ -3,49 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import type { HeroMovie } from "../../hooks/useHeroMovies";
-import { imageUrl } from "../../lib/tmdb";
 import { isUnreleased } from "../../lib/releaseStatus";
-
-declare global {
-  interface Window {
-    YT: {
-      Player: new (
-        element: HTMLElement,
-        options: YTPlayerOptions,
-      ) => YTPlayer;
-      PlayerState: { ENDED: number };
-    };
-    onYouTubeIframeAPIReady: (() => void) | undefined;
-  }
-}
-
-type YTPlayerOptions = {
-  videoId?: string;
-  height?: string | number;
-  width?: string | number;
-  playerVars?: Record<string, string | number>;
-  events?: {
-    onReady?: () => void;
-    onStateChange?: (event: { data: number }) => void;
-  };
-};
-
-type YTPlayer = {
-  loadVideoById: (videoId: string) => void;
-  mute: () => void;
-  unMute: () => void;
-  destroy: () => void;
-};
 
 function HeroSection({ heroMovies }: { heroMovies: HeroMovie[] }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [ytReady, setYtReady] = useState(false);
-  const [playerReady, setPlayerReady] = useState(false);
-  const playerRef = useRef<YTPlayer | null>(null);
-  const playerContainerRef = useRef<HTMLDivElement>(null);
-  const apiLoadingRef = useRef(false);
   const intervalRef = useRef<ReturnType<typeof setInterval>>(undefined);
 
   const current = heroMovies[currentIndex];
@@ -84,62 +47,6 @@ function HeroSection({ heroMovies }: { heroMovies: HeroMovie[] }) {
     resetTimer();
   }, [goToNext, resetTimer]);
 
-  useEffect(() => {
-    if (window.YT?.Player) {
-      setYtReady(true);
-      return;
-    }
-
-    if (apiLoadingRef.current) return;
-    apiLoadingRef.current = true;
-
-    const script = document.createElement("script");
-    script.src = "https://www.youtube.com/iframe_api";
-    document.head.appendChild(script);
-
-    window.onYouTubeIframeAPIReady = () => {
-      setYtReady(true);
-    };
-
-    return () => {
-      window.onYouTubeIframeAPIReady = undefined;
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!ytReady || !playerContainerRef.current || !current?.trailerKey) return;
-
-    if (playerRef.current) {
-      playerRef.current.loadVideoById(current.trailerKey);
-      return;
-    }
-
-    playerRef.current = new window.YT.Player(playerContainerRef.current, {
-      videoId: current.trailerKey,
-      height: "100%",
-      width: "100%",
-      playerVars: {
-        autoplay: 1,
-        controls: 0,
-        rel: 0,
-        modestbranding: 1,
-        mute: 1,
-        playsinline: 1,
-        loop: 0,
-      },
-      events: {
-        onReady: () => {
-          setPlayerReady(true);
-        },
-        onStateChange: (event) => {
-          if (event.data === window.YT.PlayerState.ENDED) {
-            advance();
-          }
-        },
-      },
-    });
-  }, [ytReady, currentIndex, current?.trailerKey, advance]);
-
   if (heroMovies.length === 0) return null;
 
   const unreleased = isUnreleased(current.status, current.releaseDate);
@@ -150,16 +57,14 @@ function HeroSection({ heroMovies }: { heroMovies: HeroMovie[] }) {
 
   return (
     <div className="relative h-[60vh] w-full overflow-hidden sm:h-[80vh] lg:h-[90vh]">
-      {/* Video / Background */}
+      {/* Background */}
       <div className="absolute inset-0">
         <motion.div
           key={currentIndex}
           initial={{ scale: 1 }}
           animate={{ scale: 1.15 }}
           transition={{ duration: 5, ease: "easeInOut" }}
-          className={`absolute inset-0 transition-opacity duration-500 ${
-            current.trailerKey && playerReady ? "opacity-0" : "opacity-100"
-          }`}
+          className="absolute inset-0"
         >
           <img
             src={backdrop}
@@ -170,12 +75,6 @@ function HeroSection({ heroMovies }: { heroMovies: HeroMovie[] }) {
             }}
           />
         </motion.div>
-      {current.trailerKey && playerReady && (
-          <div
-            ref={playerContainerRef}
-            className="pointer-events-none absolute inset-0"
-          />
-        )}
         <div className="absolute inset-0 bg-darkBlue/20" />
       </div>
 
