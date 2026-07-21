@@ -65,16 +65,15 @@ function DetailPage() {
 
   useEffect(() => {
     if (!tmdbId) return;
-    getWatchEntry(tmdbId).then((entry) => {
-      setWatchEntry(entry);
-    });
-  }, [tmdbId]);
-
-  useEffect(() => {
-    if (!tmdbId) return;
-    getWatchEntry(tmdbId).then((entry) => {
-      setDemoWatchEntry(entry);
-    });
+    getWatchEntry(tmdbId)
+      .then((entry) => {
+        setWatchEntry(entry);
+        setDemoWatchEntry(entry);
+      })
+      .catch(() => {
+        setWatchEntry(null);
+        setDemoWatchEntry(null);
+      });
   }, [tmdbId]);
 
   const DEMO_SOURCES: Record<number, string> = {
