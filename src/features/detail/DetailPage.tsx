@@ -171,7 +171,7 @@ function DetailPage() {
       progress: 1,
       season,
       episode: ep.episode_number,
-    });
+    }).catch(() => {});
     setWatchEntry({ progress: 1 });
     setMode("watch");
   };
@@ -373,7 +373,7 @@ function DetailPage() {
                     backdropPath: detail.backdrop_path,
                     progress: 1,
                     ...(mediaType === "tv" ? { season, episode } : {}),
-                  });
+                  }).catch(() => {});
                   setWatchEntry({ progress: 1 });
                   setMode("watch");
                 }}
@@ -494,7 +494,7 @@ function DetailPage() {
                     backdropPath: detail.backdrop_path,
                     progress: 100,
                     ...(mediaType === "tv" ? { season, episode } : {}),
-                  });
+                  }).catch(() => {});
                   setWatchEntry({ progress: 100 });
                   toast.success(t("detail.markedWatched"), {
                     style: { fontSize: "0.875rem", textAlign: "center" },
@@ -647,7 +647,7 @@ function DetailPage() {
                 progress: pct,
                 resumeSeconds: Math.round(currentTime),
                 ...(mediaType === "tv" ? { season, episode } : {}),
-              });
+              }).catch(() => {});
             }
           }}
           onClose={() => setDemoMode(false)}
