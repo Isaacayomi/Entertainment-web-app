@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect, Component, type ReactNode } from "react";
 import { HelmetProvider } from "react-helmet-async";
 import AppLayout from "./ui/AppLayout";
 import Spinner from "./ui/Spinner";
@@ -7,6 +7,32 @@ import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/reac
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "react-hot-toast";
 import i18n from "./lib/i18n/config";
+
+class ErrorBoundary extends Component<
+  { children: ReactNode },
+  { hasError: boolean }
+> {
+  state = { hasError: false };
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex h-screen flex-col items-center justify-center gap-4 bg-darkBlue text-white">
+          <p className="text-lg">Something went wrong.</p>
+          <button
+            onClick={() => this.setState({ hasError: false })}
+            className="rounded-full bg-red px-6 py-3 text-sm font-medium hover:bg-red/80"
+          >
+            Try again
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 const Home = lazy(() => import("./features/home/Home"));
 const Movies = lazy(() => import("./features/movies/Movies"));
@@ -68,6 +94,7 @@ function App() {
       <BrowserRouter>
         <Toaster position="top-center" reverseOrder={false} />
         <LanguageChangeHandler />
+        <ErrorBoundary>
         <Suspense fallback={<Spinner />}>
         <Routes>
           <Route element={<AppLayout />}>
@@ -92,6 +119,7 @@ function App() {
           <Route element={<PageNotFound />} path="*" />
         </Routes>
         </Suspense>
+        </ErrorBoundary>
       </BrowserRouter>
     </QueryClientProvider>
     </HelmetProvider>
