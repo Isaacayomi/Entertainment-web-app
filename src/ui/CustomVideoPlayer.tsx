@@ -56,8 +56,8 @@ export default function CustomVideoPlayer({
 
   const srcUrl =
     mediaType === "movie"
-      ? `https://vidsrc.me/embed/movie/${tmdbId}`
-      : `https://vidsrc.me/embed/tv/${tmdbId}/${season}/${episode}`;
+      ? `https://vidsrcme.ru/embed/movie/${tmdbId}`
+      : `https://vidsrcme.ru/embed/tv/${tmdbId}/${season}/${episode}`;
 
   useEffect(() => {
     setLoaded(false);
