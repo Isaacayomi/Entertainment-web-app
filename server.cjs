@@ -44,7 +44,7 @@ function setSecurityHeaders(res) {
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   res.setHeader(
     "Content-Security-Policy",
-    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' https://image.tmdb.org https://*.googleusercontent.com data:; font-src 'self'; connect-src 'self' https://api.themoviedb.org https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com https://www.googleapis.com https://ipinfo.io; frame-src https://vidsrc.me https://*.vidsrc.me; frame-ancestors 'self';"
+    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://vidsrcme.ru https://*.vidsrcme.ru https://cloudnestra.com https://*.cloudnestra.com https://unpkg.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://vidsrcme.ru https://*.vidsrcme.ru https://cdnjs.cloudflare.com; img-src 'self' https://image.tmdb.org https://*.googleusercontent.com https://i.ytimg.com data:; font-src 'self' https://cdnjs.cloudflare.com; connect-src 'self' https://api.themoviedb.org https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com https://www.googleapis.com https://ipinfo.io; frame-src https://vidsrcme.ru https://*.vidsrcme.ru https://www.youtube.com https://*.youtube.com https://cloudorchestranova.com https://*.cloudorchestranova.com; frame-ancestors 'self';"
   );
 }
 
