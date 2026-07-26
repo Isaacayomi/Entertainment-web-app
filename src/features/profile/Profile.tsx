@@ -85,7 +85,7 @@ function LanguageSelect({
         type="button"
         onClick={() => !disabled && setOpen((p) => !p)}
         disabled={disabled}
-        className="flex w-full items-center justify-between rounded-lg bg-white/10 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-red disabled:opacity-50"
+        className="flex w-full items-center justify-between rounded-lg bg-white/10 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-white/30 disabled:opacity-50"
       >
         <span>{selected?.name ?? t("profile.selectLanguage")}</span>
         <svg
@@ -310,7 +310,7 @@ function Profile() {
                   type="text"
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
-                  className="min-w-0 flex-1 rounded-lg bg-white/10 px-3 py-2 text-lg font-semibold text-white outline-none focus:ring-2 focus:ring-red"
+                  className="min-w-0 flex-1 rounded-lg bg-white/10 px-3 py-2 text-lg font-semibold text-white outline-none focus:ring-2 focus:ring-white/30"
                   placeholder="Your name"
                 />
                 <button
@@ -439,14 +439,14 @@ function Profile() {
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 placeholder={t("profile.currentPassword")}
-                className="w-full rounded-lg bg-white/10 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-red"
+                className="w-full rounded-lg bg-white/10 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-white/30"
               />
               <input
                 type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder={t("profile.newPassword")}
-                className="w-full rounded-lg bg-white/10 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-red"
+                className="w-full rounded-lg bg-white/10 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-white/30"
               />
               <div className="flex gap-2">
                 <button
@@ -535,7 +535,7 @@ function Profile() {
                     value={deletePassword}
                     onChange={(e) => setDeletePassword(e.target.value)}
                     placeholder={t("profile.enterPassword")}
-                    className="w-40 rounded-lg bg-white/10 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-red"
+                    className="w-40 rounded-lg bg-white/10 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-white/30"
                   />
                   <button
                     onClick={handleDeleteAccount}
