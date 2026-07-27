@@ -84,7 +84,7 @@ function SignUp() {
         </h2>
 
         <div className="mb-6">
-          <div className="flex w-full items-start justify-between border-b border-b-grayishBlue focus-within:border-b-white">
+          <div className={`flex w-full items-start justify-between border-b ${errors?.email ? 'border-b-red' : 'border-b-grayishBlue'} focus-within:border-b-white`}>
             <input
               id="email"
               type="email"
@@ -107,7 +107,7 @@ function SignUp() {
         </div>
 
         <div className="mb-6">
-          <div className="flex w-full items-start justify-between border-b border-b-grayishBlue focus-within:border-b-white">
+          <div className={`flex w-full items-start justify-between border-b ${errors?.password ? 'border-b-red' : 'border-b-grayishBlue'} focus-within:border-b-white`}>
             <input
               id="password"
               type="password"
@@ -130,7 +130,7 @@ function SignUp() {
         </div>
 
         <div className="mb-6">
-          <div className="flex w-full items-start justify-between border-b border-b-grayishBlue focus-within:border-b-white">
+          <div className={`flex w-full items-start justify-between border-b ${errors?.confirmPassword ? 'border-b-red' : 'border-b-grayishBlue'} focus-within:border-b-white`}>
             <input
               id="passwordConfirm"
               type="password"

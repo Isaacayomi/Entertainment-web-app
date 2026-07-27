@@ -82,7 +82,7 @@ function Login() {
         </h2>
 
         <div className="mb-6">
-          <div className="flex w-full items-start justify-between border-b border-b-grayishBlue focus-within:border-b-white">
+          <div className={`flex w-full items-start justify-between border-b ${errors?.email ? 'border-b-red' : 'border-b-grayishBlue'} focus-within:border-b-white`}>
             <input
               type="email"
               placeholder={t("auth.emailPlaceholder")}
@@ -104,7 +104,7 @@ function Login() {
         </div>
 
         <div className="mb-6">
-          <div className="flex w-full items-start justify-between border-b border-b-grayishBlue focus-within:border-b-white">
+          <div className={`flex w-full items-start justify-between border-b ${errors?.password ? 'border-b-red' : 'border-b-grayishBlue'} focus-within:border-b-white`}>
             <input
               type="password"
               placeholder={t("auth.passwordPlaceholder")}
