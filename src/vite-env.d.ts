@@ -28,6 +28,8 @@ declare module "react-hook-form" {
     formState: { errors: FieldErrors<T> };
     reset: () => void;
     getValues: (field?: keyof T) => string;
+    setError: (name: keyof T, error: { type?: string; message?: string }) => void;
+    watch: (name?: keyof T) => string;
   }
 
   export function useForm<T>(): UseFormReturn<T>;

@@ -31,6 +31,7 @@ export type HeadingProp = {
 
 export type ButtonProp = {
   children: React.ReactNode;
+  disabled?: boolean;
 };
 
 export type PlayIconProps = {
