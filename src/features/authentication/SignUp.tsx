@@ -10,7 +10,6 @@ import { AuthProps } from "types";
 import AuthLayout from "./AuthLayout";
 import AuthPrompt from "../../ui/AuthPrompt";
 import Button from "../../ui/Button";
-import ErrorMessage from "../../ui/ErrorMessage";
 import SpinnerMini from "../../ui/SpinnerMini";
 import GoogleButton from "../../ui/GoogleButton";
 import SEO from "../../ui/SEO";
@@ -44,25 +43,30 @@ function SignUp() {
     }
   }, [isAuthenticated, authPending, navigate]);
 
-  const { mutate, isPending } = useSignUp();
+  const { signUp, isPending } = useSignUp();
   const { googleLogin, isPending: googlePending } = useGoogleLogin();
 
-  const { handleSubmit, register, formState, getValues, reset } =
+  const { handleSubmit, register, formState, getValues, setError } =
     useForm<AuthProps>();
   const { errors } = formState;
+
+  const isLoading = isPending || googlePending;
 
   function onSubmit({ email, password }: AuthProps) {
     if (!email || !password) return;
 
-    mutate(
+    signUp(
+      { email, password },
       {
-        email,
-        password,
-      },
-
-      {
-        onSettled: () => {
-          reset();
+        onSuccess: () => {
+          toast.success("Account created successfully");
+          trackUserCountry();
+          navigate("/login");
+        },
+        onError: () => {
+          setError("password", {
+            message: "Account already exists.",
+          });
         },
       },
     );
@@ -79,64 +83,72 @@ function SignUp() {
           {t("auth.signUp")}
         </h2>
 
-        <div className="mb-6 flex w-full items-start justify-between border-b border-b-grayishBlue focus-within:border-b-white">
-          <input
-            id="email"
-            type="email"
-            placeholder={t("auth.emailPlaceholder")}
-            className="w-full bg-transparent pb-[1.13rem] text-white focus:outline-none"
-            aria-invalid={errors.email ? "true" : "false"}
-            {...register("email", {
-              required: t("auth.fieldRequired"),
-              setValueAs: (value) => value.trim(),
-              pattern: {
-                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: t("auth.invalidEmail"),
-              },
-            })}
-          />
-          {errors.email && <ErrorMessage>{errors.email.message}</ErrorMessage>}
-        </div>
-
-        <div className="mb-6 flex w-full items-start justify-between border-b border-b-grayishBlue focus-within:border-b-white">
-          <input
-            id="password"
-            type="password"
-            placeholder={t("auth.passwordPlaceholder")}
-            className="w-full bg-transparent pb-[1.13rem] text-white focus:outline-none"
-            aria-invalid={errors.password ? "true" : "false"}
-            {...register("password", {
-              required: t("auth.fieldRequired"),
-              setValueAs: (value) => value.trim(),
-              minLength: {
-                value: 8,
-                message: t("auth.passwordLength"),
-              },
-            })}
-          />
-          {errors.password && (
-            <ErrorMessage>{errors.password.message}</ErrorMessage>
+        <div className="mb-6">
+          <div className="flex w-full items-start justify-between border-b border-b-grayishBlue focus-within:border-b-white">
+            <input
+              id="email"
+              type="email"
+              placeholder={t("auth.emailPlaceholder")}
+              className="w-full bg-transparent pb-[1.13rem] text-white focus:outline-none"
+              aria-invalid={errors.email ? "true" : "false"}
+              {...register("email", {
+                required: t("auth.fieldRequired"),
+                setValueAs: (value) => value.trim(),
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: t("auth.invalidEmail"),
+                },
+              })}
+            />
+          </div>
+          {errors?.email && (
+            <p className="pt-1 text-xs text-red">{errors?.email?.message}</p>
           )}
         </div>
 
-        <div className="mb-6 flex w-full items-start justify-between border-b border-b-grayishBlue focus-within:border-b-white">
-          <input
-            id="passwordConfirm"
-            type="password"
-            placeholder={t("auth.repeatPasswordPlaceholder")}
-            className="w-full bg-transparent pb-[1.13rem] text-white focus:outline-none"
-            {...register("confirmPassword", {
-              required: t("auth.fieldRequired"),
-              validate: (value) =>
-                value === getValues("password") || t("auth.passwordsMismatch"),
-            })}
-          />
-          {errors.confirmPassword && (
-            <ErrorMessage>{errors.confirmPassword.message}</ErrorMessage>
+        <div className="mb-6">
+          <div className="flex w-full items-start justify-between border-b border-b-grayishBlue focus-within:border-b-white">
+            <input
+              id="password"
+              type="password"
+              placeholder={t("auth.passwordPlaceholder")}
+              className="w-full bg-transparent pb-[1.13rem] text-white focus:outline-none"
+              aria-invalid={errors.password ? "true" : "false"}
+              {...register("password", {
+                required: t("auth.fieldRequired"),
+                setValueAs: (value) => value.trim(),
+                minLength: {
+                  value: 8,
+                  message: t("auth.passwordLength"),
+                },
+              })}
+            />
+          </div>
+          {errors?.password && (
+            <p className="pt-1 text-xs text-red">{errors?.password?.message}</p>
           )}
         </div>
 
-        <Button>{isPending ? <SpinnerMini /> : t("auth.createAccount")}</Button>
+        <div className="mb-6">
+          <div className="flex w-full items-start justify-between border-b border-b-grayishBlue focus-within:border-b-white">
+            <input
+              id="passwordConfirm"
+              type="password"
+              placeholder={t("auth.repeatPasswordPlaceholder")}
+              className="w-full bg-transparent pb-[1.13rem] text-white focus:outline-none"
+              {...register("confirmPassword", {
+                required: t("auth.fieldRequired"),
+                validate: (value) =>
+                  value === getValues("password") || t("auth.passwordsMismatch"),
+              })}
+            />
+          </div>
+          {errors?.confirmPassword && (
+            <p className="pt-1 text-xs text-red">{errors?.confirmPassword?.message}</p>
+          )}
+        </div>
+
+        <Button disabled={isLoading}>{isLoading ? <SpinnerMini /> : t("auth.createAccount")}</Button>
 
         <div className="relative mb-6">
           <div className="absolute inset-0 flex items-center">
@@ -150,7 +162,7 @@ function SignUp() {
         <div className="mb-4">
           <GoogleButton
             onClick={() => googleLogin()}
-            isPending={googlePending}
+            isPending={isLoading}
             label={t("auth.continueWithGoogle")}
           />
         </div>

@@ -9,7 +9,6 @@ import { AuthProps } from "types";
 
 import AuthLayout from "./AuthLayout";
 import AuthPrompt from "../../ui/AuthPrompt";
-import ErrorMessage from "../../ui/ErrorMessage";
 import Button from "../../ui/Button";
 import SpinnerMini from "../../ui/SpinnerMini";
 import GoogleButton from "../../ui/GoogleButton";
@@ -44,10 +43,12 @@ function Login() {
     }
   }, [isAuthenticated, authPending, navigate]);
 
-  const { handleSubmit, register, formState, reset } = useForm<AuthProps>();
+  const { handleSubmit, register, formState, setError } = useForm<AuthProps>();
   const { errors } = formState;
   const { login, isPending } = useLogin();
   const { googleLogin, isPending: googlePending } = useGoogleLogin();
+
+  const isLoading = isPending || googlePending;
 
   function onSubmit({ email, password }: AuthProps) {
     if (!email || !password) return;
@@ -55,8 +56,15 @@ function Login() {
     login(
       { email, password },
       {
-        onSettled: () => {
-          reset();
+        onSuccess: () => {
+          trackUserCountry();
+          navigate("/", { replace: true });
+          toast.success("Logged in successfully");
+        },
+        onError: () => {
+          setError("password", {
+            message: "Invalid email or password. Please try again.",
+          });
         },
       },
     );
@@ -73,47 +81,51 @@ function Login() {
           {t("auth.login")}
         </h2>
 
-        <div className="mb-6 flex w-full items-start justify-between border-b border-b-grayishBlue focus-within:border-b-white">
-          <input
-            type="email"
-            placeholder={t("auth.emailPlaceholder")}
-            className="w-full bg-transparent pb-[1.13rem] text-white focus:outline-none"
-            aria-invalid={errors.email ? "true" : "false"}
-            {...register("email", {
-              required: t("auth.fieldRequired"),
-              setValueAs: (value) => value.trim(),
-              pattern: {
-                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: t("auth.invalidEmail"),
-              },
-            })}
-          />
+        <div className="mb-6">
+          <div className="flex w-full items-start justify-between border-b border-b-grayishBlue focus-within:border-b-white">
+            <input
+              type="email"
+              placeholder={t("auth.emailPlaceholder")}
+              className="w-full bg-transparent pb-[1.13rem] text-white focus:outline-none"
+              aria-invalid={errors.email ? "true" : "false"}
+              {...register("email", {
+                required: t("auth.fieldRequired"),
+                setValueAs: (value) => value.trim(),
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: t("auth.invalidEmail"),
+                },
+              })}
+            />
+          </div>
           {errors?.email && (
-            <ErrorMessage>{errors?.email?.message}</ErrorMessage>
+            <p className="pt-1 text-xs text-red">{errors?.email?.message}</p>
           )}
         </div>
 
-        <div className="mb-6 flex w-full items-start justify-between border-b border-b-grayishBlue focus-within:border-b-white">
-          <input
-            type="password"
-            placeholder={t("auth.passwordPlaceholder")}
-            className="w-full bg-transparent pb-[1.13rem] text-white focus:outline-none"
-            aria-invalid={errors.password ? "true" : "false"}
-            {...register("password", {
-              required: t("auth.fieldRequired"),
-              setValueAs: (value) => value.trim(),
-              minLength: {
-                value: 8,
-                message: t("auth.passwordLength"),
-              },
-            })}
-          />
+        <div className="mb-6">
+          <div className="flex w-full items-start justify-between border-b border-b-grayishBlue focus-within:border-b-white">
+            <input
+              type="password"
+              placeholder={t("auth.passwordPlaceholder")}
+              className="w-full bg-transparent pb-[1.13rem] text-white focus:outline-none"
+              aria-invalid={errors.password ? "true" : "false"}
+              {...register("password", {
+                required: t("auth.fieldRequired"),
+                setValueAs: (value) => value.trim(),
+                minLength: {
+                  value: 8,
+                  message: t("auth.passwordLength"),
+                },
+              })}
+            />
+          </div>
           {errors?.password && (
-            <ErrorMessage>{errors?.password?.message}</ErrorMessage>
+            <p className="pt-1 text-xs text-red">{errors?.password?.message}</p>
           )}
         </div>
 
-        <Button>{isPending ? <SpinnerMini /> : t("auth.loginToAccount")}</Button>
+        <Button disabled={isLoading}>{isLoading ? <SpinnerMini /> : t("auth.loginToAccount")}</Button>
 
         <div className="relative mb-6">
           <div className="absolute inset-0 flex items-center">
@@ -127,7 +139,7 @@ function Login() {
         <div className="mb-4">
           <GoogleButton
             onClick={() => googleLogin()}
-            isPending={googlePending}
+            isPending={isLoading}
             label={t("auth.continueWithGoogle")}
           />
         </div>
