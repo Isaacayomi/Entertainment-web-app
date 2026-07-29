@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { googleLoginApi } from "../services/apiAuth";
 import { trackUserCountry } from "../services/apiGeolocation";
 
-function getGoogleAuthErrorMessage(error: unknown): string {
+export function getGoogleAuthErrorMessage(error: unknown): string {
   const code = (error as { code?: string })?.code;
 
   switch (code) {

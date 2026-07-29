@@ -14,7 +14,10 @@ import ErrorMessage from "../../ui/ErrorMessage";
 import SpinnerMini from "../../ui/SpinnerMini";
 import GoogleButton from "../../ui/GoogleButton";
 import SEO from "../../ui/SEO";
+import toast from "react-hot-toast";
 import { handleRedirectResult } from "../../services/apiAuth";
+import { trackUserCountry } from "../../services/apiGeolocation";
+import { getGoogleAuthErrorMessage } from "../../hooks/useGoogleLogin";
 
 function SignUp() {
   const { t } = useTranslation();
@@ -22,8 +25,18 @@ function SignUp() {
   const { isAuthenticated, isPending: authPending } = useUser();
 
   useEffect(() => {
-    handleRedirectResult().catch(() => {});
-  }, []);
+    handleRedirectResult()
+      .then((result) => {
+        if (result) {
+          trackUserCountry();
+          navigate("/", { replace: true });
+          toast.success("Logged in successfully");
+        }
+      })
+      .catch((error) => {
+        toast.error(getGoogleAuthErrorMessage(error));
+      });
+  }, [navigate]);
 
   useEffect(() => {
     if (!authPending && isAuthenticated) {
