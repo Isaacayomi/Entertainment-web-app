@@ -7,6 +7,7 @@ Woflix is a high-performance streaming platform built with **React 19**, **TypeS
 ## Features
 
 ### Content Discovery
+
 - **Trending Carousel** — Auto-sliding, swipeable carousel of trending movies and shows with a Top 10 numbered badge
 - **Genre Rows** — Dedicated horizontal rows for Action, Comedy, Drama, Sci-Fi, and more
 - **Top Rated & New Releases** — Curated sections for popular and recently released content
@@ -14,6 +15,7 @@ Woflix is a high-performance streaming platform built with **React 19**, **TypeS
 - **Genre Filtering** — Filter movies and TV series by genre with chip-style buttons
 
 ### User Features
+
 - **User Authentication** — Secure sign-up and login powered by Firebase Auth with persistent sessions
 - **Bookmarks (My List)** — Save content to a personalized list with category tabs (All / Movies / Series) and an empty-state guide
 - **Continue Watching** — Automatically tracks in-progress items with a visual progress bar
@@ -22,16 +24,19 @@ Woflix is a high-performance streaming platform built with **React 19**, **TypeS
 - **Multi-Language Support** — The entire UI translates across **12 languages** (English, French, Spanish, German, Japanese, Korean, Hindi, Chinese, Italian, Portuguese, Russian, Arabic). Switch from the Profile page — preference syncs to your account and local storage. TMDB API results also follow your chosen language.
 
 ### Search
+
 - **Global Search** — Context-aware search that prioritizes results based on the current view
 - **URL-Persisted Queries** — Search state is preserved in the URL, surviving navigation and page reloads
 
 ### Detail Pages
+
 - **Full-Screen Trailer Hero** — Auto-playing YouTube trailer with mute toggle and full opacity
 - **Cast & Crew** — Scrollable cast row with character details
 - **Similar & Recommendations** — Related content suggestions powered by TMDB
 - **Watch Now** — In-app streaming with season/episode selector for TV series
 
 ### Technical Highlights
+
 - **Responsive Design** — Mobile-first layout with adaptive grid and carousel breakpoints
 - **Optimized Performance** — Vite for fast builds, TanStack Query for efficient caching and server-state management
 - **PWA Support** — Service worker caching and installable web app manifest
@@ -39,6 +44,7 @@ Woflix is a high-performance streaming platform built with **React 19**, **TypeS
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js 18+
 - npm
 
@@ -90,20 +96,20 @@ npm run build
 
 ## Technologies Used
 
-| Technology | Purpose |
-|------------|---------|
-| **React 19** | UI Library |
-| **TypeScript** | Type Safety |
-| **Vite 7** | Build Tool |
-| **Firebase** | Authentication & Database |
-| **TanStack Query 5** | Server-State Management |
-| **Tailwind CSS 3** | Styling |
-| **React Router 6** | Routing |
-| **Swiper 12** | Carousel Components |
-| **React Hook Form 7** | Form Handling |
-| **React Hot Toast** | Notifications |
-| **i18next** | Internationalization (12 languages) |
-| **TMDB API** | Content Data |
+| Technology            | Purpose                             |
+| --------------------- | ----------------------------------- |
+| **React 19**          | UI Library                          |
+| **TypeScript**        | Type Safety                         |
+| **Vite 7**            | Build Tool                          |
+| **Firebase**          | Authentication & Database           |
+| **TanStack Query 5**  | Server-State Management             |
+| **Tailwind CSS 3**    | Styling                             |
+| **React Router 6**    | Routing                             |
+| **Swiper 12**         | Carousel Components                 |
+| **React Hook Form 7** | Form Handling                       |
+| **React Hot Toast**   | Notifications                       |
+| **i18next**           | Internationalization (12 languages) |
+| **TMDB API**          | Content Data                        |
 
 ## Author
 

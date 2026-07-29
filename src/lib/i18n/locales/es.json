@@ -16,7 +16,9 @@
   "search": {
     "allPlaceholder": "Buscar películas o series",
     "moviesPlaceholder": "Buscar películas",
-    "seriesPlaceholder": "Buscar series TV"
+    "seriesPlaceholder": "Buscar series TV",
+    "recentSearches": "Búsquedas recientes",
+    "clearHistory": "Borrar historial"
   },
   "home": {
     "trending": "Tendencias",

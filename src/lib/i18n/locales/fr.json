@@ -19,7 +19,9 @@
     "moviesPlaceholder": "Rechercher des films",
     "seriesPlaceholder": "Rechercher des séries TV",
     "browsePlaceholder": "Rechercher Films/Séries",
-    "bookmarksPlaceholder": "Rechercher dans les favoris"
+    "bookmarksPlaceholder": "Rechercher dans les favoris",
+    "recentSearches": "Recherches récentes",
+    "clearHistory": "Effacer l'historique"
   },
   "home": {
     "trending": "Tendances",

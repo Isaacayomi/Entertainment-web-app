@@ -16,7 +16,9 @@
   "search": {
     "allPlaceholder": "搜索电影或剧集",
     "moviesPlaceholder": "搜索电影",
-    "seriesPlaceholder": "搜索剧集"
+    "seriesPlaceholder": "搜索剧集",
+    "recentSearches": "最近搜索",
+    "clearHistory": "清除历史"
   },
   "home": {
     "trending": "热门",

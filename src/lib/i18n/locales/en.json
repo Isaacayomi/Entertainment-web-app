@@ -22,7 +22,9 @@
     "seriesPlaceholder": "Search for TV series",
     "browsePlaceholder": "Search for Movies/Shows",
     "bookmarksPlaceholder": "Search for Bookmarked",
-    "iconAlt": "Search icon"
+    "iconAlt": "Search icon",
+    "recentSearches": "Recent searches",
+    "clearHistory": "Clear history"
   },
   "home": {
     "trending": "Trending",

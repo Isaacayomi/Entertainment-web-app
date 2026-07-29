@@ -16,7 +16,9 @@
   "search": {
     "allPlaceholder": "영화 또는 시리즈 검색",
     "moviesPlaceholder": "영화 검색",
-    "seriesPlaceholder": "시리즈 검색"
+    "seriesPlaceholder": "시리즈 검색",
+    "recentSearches": "최근 검색",
+    "clearHistory": "기록 지우기"
   },
   "home": {
     "trending": "트렌딩",

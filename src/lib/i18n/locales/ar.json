@@ -16,7 +16,9 @@
   "search": {
     "allPlaceholder": "البحث عن أفلام أو مسلسلات",
     "moviesPlaceholder": "البحث عن أفلام",
-    "seriesPlaceholder": "البحث عن مسلسلات"
+    "seriesPlaceholder": "البحث عن مسلسلات",
+    "recentSearches": "عمليات البحث الأخيرة",
+    "clearHistory": "مسح السجل"
   },
   "home": {
     "trending": "رائج",

@@ -16,7 +16,9 @@
   "search": {
     "allPlaceholder": "Поиск фильмов или сериалов",
     "moviesPlaceholder": "Поиск фильмов",
-    "seriesPlaceholder": "Поиск сериалов"
+    "seriesPlaceholder": "Поиск сериалов",
+    "recentSearches": "Недавние запросы",
+    "clearHistory": "Очистить историю"
   },
   "home": {
     "trending": "В тренде",

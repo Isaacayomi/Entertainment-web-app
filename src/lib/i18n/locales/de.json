@@ -16,7 +16,9 @@
   "search": {
     "allPlaceholder": "Filme oder Serien suchen",
     "moviesPlaceholder": "Filme suchen",
-    "seriesPlaceholder": "Serien suchen"
+    "seriesPlaceholder": "Serien suchen",
+    "recentSearches": "Letzte Suchen",
+    "clearHistory": "Verlauf löschen"
   },
   "home": {
     "trending": "Trends",
