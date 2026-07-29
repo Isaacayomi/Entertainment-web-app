@@ -62,8 +62,11 @@ function Login() {
           toast.success("Logged in successfully");
         },
         onError: () => {
+          setError("email", {
+            message: "Incorrect email. Please try again.",
+          });
           setError("password", {
-            message: "Invalid email or password. Please try again.",
+            message: "Incorrect password. Please try again.",
           });
         },
       },
@@ -82,7 +85,7 @@ function Login() {
         </h2>
 
         <div className="mb-6">
-          <div className={`flex w-full items-start justify-between border-b ${errors?.email ? 'border-b-red' : 'border-b-grayishBlue focus-within:border-b-red'}`}>
+          <div className={`flex w-full items-start justify-between border-b ${errors?.email ? 'border-b-red' : 'hover:border-b-red focus-within:border-b-red'}`}>
             <input
               type="email"
               placeholder={t("auth.emailPlaceholder")}
@@ -104,7 +107,7 @@ function Login() {
         </div>
 
         <div className="mb-6">
-          <div className={`flex w-full items-start justify-between border-b ${errors?.password ? 'border-b-red' : 'border-b-grayishBlue focus-within:border-b-red'}`}>
+          <div className={`flex w-full items-start justify-between border-b ${errors?.password ? 'border-b-red' : 'hover:border-b-red focus-within:border-b-red'}`}>
             <input
               type="password"
               placeholder={t("auth.passwordPlaceholder")}
