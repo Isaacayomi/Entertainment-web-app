@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-  // Set CORS and security headers
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -10,8 +9,10 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  const { path } = req.query;
-  const tmdbPath = Array.isArray(path) ? path.join("/") : path;
+  const tmdbPath = req.query.tmdbPath;
+  if (!tmdbPath) {
+    return res.status(400).json({ error: "Missing tmdbPath query parameter" });
+  }
 
   const apiKey = process.env.VITE_TMDB_API_KEY;
   if (!apiKey) {
@@ -20,14 +21,12 @@ export default async function handler(req, res) {
 
   const tmdbUrl = new URL(`https://api.themoviedb.org/3/${tmdbPath}`);
 
-  // Forward query params from the client request
   for (const [key, value] of Object.entries(req.query)) {
-    if (key !== "path" && typeof value === "string") {
+    if (key !== "tmdbPath" && typeof value === "string") {
       tmdbUrl.searchParams.set(key, value);
     }
   }
 
-  // Always inject the API key server-side
   tmdbUrl.searchParams.set("api_key", apiKey);
 
   try {
