@@ -64,21 +64,21 @@ function Admin() {
       setSignupsLoading(true);
       try {
         let result;
-        let entry: PageEntry | null = null;
         if (targetPage === 1) {
           result = await getSignupsPage({ pageSize: size });
-          entry = result.prev && result.next ? { first: result.prev, last: result.next } : null;
         } else if (dir === "prev") {
-          const anchor = anchors[targetPage - 1];
+          const anchor = anchors[targetPage];
           if (!anchor) return;
           result = await getSignupsPage({ pageSize: size, before: anchor.first });
-          entry = anchor;
         } else {
           const anchor = anchors[targetPage - 2];
           if (!anchor) return;
           result = await getSignupsPage({ pageSize: size, after: anchor.last });
-          entry = result.prev && result.next ? { first: result.prev, last: result.next } : null;
         }
+        const entry: PageEntry | null =
+          result.prev && result.next
+            ? { first: result.prev, last: result.next }
+            : null;
         setSignups(result.users);
         setAnchors((prev) => {
           const next = [...prev];
@@ -86,8 +86,9 @@ function Admin() {
           return next;
         });
         setCurrentPage(targetPage);
-        setHasNext(result.users.length === size && !!result.next);
-      } catch {
+        setHasNext(result.hasMore);
+      } catch (error) {
+        console.error("Failed to load users page:", error);
         setSignups([]);
         setHasNext(false);
       } finally {
@@ -307,10 +308,15 @@ function Admin() {
           </div>
         </section>
 
-        {/* Recent Signups */}
+        {/* All Users */}
         <section>
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <h2 className="text-lg font-semibold">Recent Signups</h2>
+            <div>
+              <h2 className="text-lg font-semibold">All Users</h2>
+              <p className="mt-0.5 text-xs text-white/40">
+                Everyone who signed up or signed in, newest first
+              </p>
+            </div>
             <div className="flex items-center gap-2">
               <span className="text-xs text-white/40">Rows</span>
               <select
@@ -367,7 +373,7 @@ function Admin() {
                           colSpan={3}
                           className="px-4 py-8 text-center text-white/30"
                         >
-                          No signups yet.
+                          No users yet.
                         </td>
                       </tr>
                     )}
