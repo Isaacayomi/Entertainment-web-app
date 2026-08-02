@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { googleLoginApi } from "../services/apiAuth";
 import { trackUserCountry } from "../services/apiGeolocation";
+import { getAuthReturnTo, clearAuthReturnTo } from "../services/authReturn";
 
 export function getGoogleAuthErrorMessage(error: unknown): string {
   const code = (error as { code?: string })?.code;
@@ -32,7 +33,9 @@ export function useGoogleLogin() {
     mutationFn: googleLoginApi,
     onSuccess: () => {
       trackUserCountry();
-      navigate("/", { replace: true });
+      const target = getAuthReturnTo() ?? "/";
+      clearAuthReturnTo();
+      navigate(target, { replace: true });
       toast.success("Logged in successfully");
     },
     onError: (error: unknown) => {
