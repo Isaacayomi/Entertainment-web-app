@@ -10,13 +10,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import Search from "../features/search/Search";
 import Navbar from "./Navbar";
-import ProtectedRoute from "./ProtectedRoute";
 import { useLogout } from "../hooks/useLogout";
+import { useUser } from "../hooks/useUser";
 import { auth } from "../lib/firebase";
+import { setAuthReturnTo } from "../services/authReturn";
 
 function AppLayout() {
   const { t } = useTranslation();
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   const navigate = useNavigate();
   const mainRef = useRef<HTMLDivElement>(null);
 
@@ -34,20 +35,19 @@ function AppLayout() {
   }, [pathname, isDetailRoute]);
 
   const { logout, isPending: logoutPending } = useLogout();
+  const { isAuthenticated } = useUser();
+  const saveReturn = () => setAuthReturnTo(pathname + search);
 
   if (isDetailRoute) {
     return (
-      <ProtectedRoute>
-        <div className="min-h-screen bg-darkBlue font-outfit text-white">
-          <Outlet />
-        </div>
-      </ProtectedRoute>
+      <div className="min-h-screen bg-darkBlue font-outfit text-white">
+        <Outlet />
+      </div>
     );
   }
 
   return (
-    <ProtectedRoute>
-      <div className="h-[100dvh] overflow-hidden bg-darkBlue font-outfit text-white">
+    <div className="h-[100dvh] overflow-hidden bg-darkBlue font-outfit text-white">
         <div className="flex h-full gap-9 px-4 pb-20 lg:px-0 lg:pb-8">
           <Navbar />
 
@@ -86,40 +86,61 @@ function AppLayout() {
                 </div>
 
                 <div className="flex items-center gap-3 md:hidden">
-                  <NavLink
-                    to="/profile"
-                    className="h-8 w-8 overflow-hidden rounded-full border border-white/50"
-                  >
-                    <img
-                      src={
-                        auth.currentUser?.photoURL ||
-                        "/assets/image-avatar.png"
-                      }
-                      alt=""
-                      className="h-full w-full object-cover"
-                    />
-                  </NavLink>
-                  <button
-                    onClick={() => logout()}
-                    disabled={logoutPending}
-                    className="text-white/60 transition-colors hover:text-red"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                      <polyline points="16 17 21 12 16 7" />
-                      <line x1="21" y1="12" x2="9" y2="12" />
-                    </svg>
-                  </button>
+                  {isAuthenticated ? (
+                    <>
+                      <NavLink
+                        to="/profile"
+                        className="h-8 w-8 overflow-hidden rounded-full border border-white/50"
+                      >
+                        <img
+                          src={
+                            auth.currentUser?.photoURL ||
+                            "/assets/image-avatar.png"
+                          }
+                          alt=""
+                          className="h-full w-full object-cover"
+                        />
+                      </NavLink>
+                      <button
+                        onClick={() => logout()}
+                        disabled={logoutPending}
+                        className="text-white/60 transition-colors hover:text-red"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                          <polyline points="16 17 21 12 16 7" />
+                          <line x1="21" y1="12" x2="9" y2="12" />
+                        </svg>
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        to="/login"
+                        onClick={saveReturn}
+                        className="text-xs font-medium text-white/60 transition-colors hover:text-white"
+                      >
+                        Sign In
+                      </Link>
+                      <Link
+                        to="/sign-up"
+                        onClick={saveReturn}
+                        className="text-xs font-medium text-white/60 transition-colors hover:text-white"
+                      >
+                        Sign Up
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -130,40 +151,61 @@ function AppLayout() {
                   </div>
                 )}
                 <div className="hidden items-center gap-5 md:flex lg:hidden">
-                  <NavLink
-                    to="/profile"
-                    className="h-8 w-8 overflow-hidden rounded-full border border-white/50"
-                  >
-                    <img
-                      src={
-                        auth.currentUser?.photoURL ||
-                        "/assets/image-avatar.png"
-                      }
-                      alt=""
-                      className="h-full w-full object-cover"
-                    />
-                  </NavLink>
-                  <button
-                    onClick={() => logout()}
-                    disabled={logoutPending}
-                    className="text-white/60 transition-colors hover:text-red"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                      <polyline points="16 17 21 12 16 7" />
-                      <line x1="21" y1="12" x2="9" y2="12" />
-                    </svg>
-                  </button>
+                  {isAuthenticated ? (
+                    <>
+                      <NavLink
+                        to="/profile"
+                        className="h-8 w-8 overflow-hidden rounded-full border border-white/50"
+                      >
+                        <img
+                          src={
+                            auth.currentUser?.photoURL ||
+                            "/assets/image-avatar.png"
+                          }
+                          alt=""
+                          className="h-full w-full object-cover"
+                        />
+                      </NavLink>
+                      <button
+                        onClick={() => logout()}
+                        disabled={logoutPending}
+                        className="text-white/60 transition-colors hover:text-red"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                          <polyline points="16 17 21 12 16 7" />
+                          <line x1="21" y1="12" x2="9" y2="12" />
+                        </svg>
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        to="/login"
+                        onClick={saveReturn}
+                        className="text-xs font-medium text-white/60 transition-colors hover:text-white"
+                      >
+                        Sign In
+                      </Link>
+                      <Link
+                        to="/sign-up"
+                        onClick={saveReturn}
+                        className="text-xs font-medium text-white/60 transition-colors hover:text-white"
+                      >
+                        Sign Up
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             </header>
@@ -187,7 +229,6 @@ function AppLayout() {
           </div>
         </div>
       </div>
-    </ProtectedRoute>
   );
 }
 
