@@ -180,14 +180,14 @@ function Admin() {
           <line x1="12" y1="20" x2="12" y2="4" />
           <line x1="6" y1="20" x2="6" y2="14" />
         </svg>
-        <h1 className="text-2xl font-bold">Admiin Dashboard</h1>
+        <h1 className="text-2xl font-bold">Admin Dashboard</h1>
       </div>
 
       {/* Stats Cards */}
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-xl bg-white/5 p-5">
           <p className="text-xs uppercase tracking-wider text-white/40">
-            Total Useers
+            Total Users
           </p>
           <p className="mt-1 text-3xl font-bold">{stats.totalUsers}</p>
         </div>
