@@ -1,12 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   isAdmin,
   getAllAdminStats,
+  getSignupsPage,
   type AdminStats,
+  type SignupUser,
 } from "../../services/apiAdmin";
+import type { QueryDocumentSnapshot } from "firebase/firestore";
 import Spinner from "../../ui/Spinner";
 import SEO from "../../ui/SEO";
+
+type PageEntry = { first: QueryDocumentSnapshot; last: QueryDocumentSnapshot };
+
+const PAGE_SIZES = [10, 20, 50, 100];
+const DEFAULT_PAGE_SIZE = 20;
 
 function Admin() {
   const navigate = useNavigate();
@@ -14,6 +22,13 @@ function Admin() {
   const [authorized, setAuthorized] = useState(false);
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
+  const [anchors, setAnchors] = useState<(PageEntry | null)[]>([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [signups, setSignups] = useState<SignupUser[]>([]);
+  const [signupsLoading, setSignupsLoading] = useState(false);
+  const [hasNext, setHasNext] = useState(false);
 
   useEffect(() => {
     isAdmin()
@@ -43,6 +58,61 @@ function Admin() {
         setLoading(false);
       });
   }, [authorized]);
+
+  const loadPage = useCallback(
+    async (size: number, targetPage: number, dir: "next" | "prev") => {
+      setSignupsLoading(true);
+      try {
+        let result;
+        let entry: PageEntry | null = null;
+        if (targetPage === 1) {
+          result = await getSignupsPage({ pageSize: size });
+          entry = result.prev && result.next ? { first: result.prev, last: result.next } : null;
+        } else if (dir === "prev") {
+          const anchor = anchors[targetPage - 1];
+          if (!anchor) return;
+          result = await getSignupsPage({ pageSize: size, before: anchor.first });
+          entry = anchor;
+        } else {
+          const anchor = anchors[targetPage - 2];
+          if (!anchor) return;
+          result = await getSignupsPage({ pageSize: size, after: anchor.last });
+          entry = result.prev && result.next ? { first: result.prev, last: result.next } : null;
+        }
+        setSignups(result.users);
+        setAnchors((prev) => {
+          const next = [...prev];
+          next[targetPage - 1] = entry;
+          return next;
+        });
+        setCurrentPage(targetPage);
+        setHasNext(result.users.length === size && !!result.next);
+      } catch {
+        setSignups([]);
+        setHasNext(false);
+      } finally {
+        setSignupsLoading(false);
+      }
+    },
+    [anchors],
+  );
+
+  const handleChangePageSize = (size: number) => {
+    setPageSize(size);
+    setAnchors([]);
+    setCurrentPage(0);
+    setSignups([]);
+    setHasNext(false);
+    loadPage(size, 1, "next");
+  };
+
+  const hasStats = stats !== null;
+
+  useEffect(() => {
+    if (!authorized || !hasStats) return;
+    loadPage(pageSize, 1, "next");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authorized, hasStats]);
 
   if (checking) {
     return (
@@ -137,10 +207,12 @@ function Admin() {
         </div>
         <div className="rounded-xl bg-white/5 p-5">
           <p className="text-xs uppercase tracking-wider text-white/40">
-            Recent Signups
+            Avg Watches / User
           </p>
           <p className="mt-1 text-3xl font-bold">
-            {stats.recentSignups.length}
+            {stats.totalUsers > 0
+              ? (stats.totalWatches / stats.totalUsers).toFixed(1)
+              : "0"}
           </p>
         </div>
       </div>
@@ -237,7 +309,24 @@ function Admin() {
 
         {/* Recent Signups */}
         <section>
-          <h2 className="mb-4 text-lg font-semibold">Recent Signups</h2>
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <h2 className="text-lg font-semibold">Recent Signups</h2>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-white/40">Rows</span>
+              <select
+                value={pageSize}
+                onChange={(e) => handleChangePageSize(Number(e.target.value))}
+                className="rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:ring-2 focus:ring-white/30"
+              >
+                {PAGE_SIZES.map((size) => (
+                  <option key={size} value={size}>
+                    {size}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
           <div className="overflow-x-auto rounded-xl bg-white/5">
             <table className="w-full text-left text-sm">
               <thead>
@@ -248,32 +337,93 @@ function Admin() {
                 </tr>
               </thead>
               <tbody>
-                {stats.recentSignups.map((user) => (
-                  <tr
-                    key={user.uid}
-                    className="border-b border-white/5 hover:bg-white/5"
-                  >
-                    <td className="max-w-[200px] truncate px-4 py-3 font-medium">
-                      {user.email}
-                    </td>
-                    <td className="px-4 py-3 text-white/60">{user.country}</td>
-                    <td className="px-4 py-3 text-xs text-white/50">
-                      {user.createdAt}
-                    </td>
-                  </tr>
-                ))}
-                {stats.recentSignups.length === 0 && (
+                {signupsLoading ? (
                   <tr>
-                    <td
-                      colSpan={3}
-                      className="px-4 py-8 text-center text-white/30"
-                    >
-                      No signups yet.
+                    <td colSpan={3} className="px-4 py-8">
+                      <div className="flex items-center justify-center gap-2 text-white/40">
+                        <Spinner />
+                      </div>
                     </td>
                   </tr>
+                ) : (
+                  <>
+                    {signups.map((user) => (
+                      <tr
+                        key={user.uid}
+                        className="border-b border-white/5 hover:bg-white/5"
+                      >
+                        <td className="max-w-[200px] truncate px-4 py-3 font-medium">
+                          {user.email}
+                        </td>
+                        <td className="px-4 py-3 text-white/60">{user.country}</td>
+                        <td className="px-4 py-3 text-xs text-white/50">
+                          {user.createdAt}
+                        </td>
+                      </tr>
+                    ))}
+                    {signups.length === 0 && (
+                      <tr>
+                        <td
+                          colSpan={3}
+                          className="px-4 py-8 text-center text-white/30"
+                        >
+                          No signups yet.
+                        </td>
+                      </tr>
+                    )}
+                  </>
                 )}
               </tbody>
             </table>
+          </div>
+
+          <div className="mt-4 flex items-center justify-between">
+            <span className="text-sm text-white/40">
+              Page {currentPage}
+              {signups.length > 0 && ` · ${signups.length} shown`}
+            </span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => loadPage(pageSize, currentPage - 1, "prev")}
+                disabled={signupsLoading || currentPage <= 1}
+                className="flex items-center gap-1 rounded-lg bg-white/10 px-3 py-2 text-sm transition-colors hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+                Prev
+              </button>
+              <button
+                onClick={() => loadPage(pageSize, currentPage + 1, "next")}
+                disabled={signupsLoading || !hasNext}
+                className="flex items-center gap-1 rounded-lg bg-white/10 px-3 py-2 text-sm transition-colors hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Next
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </button>
+            </div>
           </div>
         </section>
       </div>

@@ -6,9 +6,13 @@ import {
   query,
   orderBy,
   limit,
+  limitToLast,
+  startAfter,
+  endBefore,
   doc,
   getDoc,
   Timestamp,
+  type QueryDocumentSnapshot,
 } from "firebase/firestore";
 
 export type AdminStats = {
@@ -16,7 +20,19 @@ export type AdminStats = {
   totalWatches: number;
   popularContent: { title: string; count: number; category: string }[];
   countryBreakdown: { country: string; count: number }[];
-  recentSignups: { uid: string; email: string; createdAt: string; country: string }[];
+};
+
+export type SignupUser = {
+  uid: string;
+  email: string;
+  createdAt: string;
+  country: string;
+};
+
+export type SignupPage = {
+  users: SignupUser[];
+  next: QueryDocumentSnapshot | null;
+  prev: QueryDocumentSnapshot | null;
 };
 
 export async function isAdmin(): Promise<boolean> {
@@ -81,31 +97,60 @@ export async function getCountryBreakdown(): Promise<{ country: string; count: n
     .sort((a, b) => b.count - a.count);
 }
 
-export async function getRecentSignups(limitCount = 20): Promise<AdminStats["recentSignups"]> {
-  const snap = await getDocs(
-    query(collection(db, "users"), orderBy("createdAt", "desc"), limit(limitCount)),
-  );
-  return snap.docs.map((d) => {
-    const data = d.data();
-    return {
-      uid: d.id,
-      email: data.email || "unknown",
-      createdAt: data.createdAt
-        ? (data.createdAt instanceof Timestamp ? data.createdAt.toDate() : new Date(data.createdAt)).toLocaleDateString()
-        : "N/A",
-      country: data.country || "Unknown",
-    };
-  });
+function mapSignupDoc(d: QueryDocumentSnapshot): SignupUser {
+  const data = d.data();
+  return {
+    uid: d.id,
+    email: data.email || "unknown",
+    createdAt: data.createdAt
+      ? (data.createdAt instanceof Timestamp ? data.createdAt.toDate() : new Date(data.createdAt)).toLocaleDateString()
+      : "N/A",
+    country: data.country || "Unknown",
+  };
+}
+
+export async function getSignupsPage(opts: {
+  pageSize: number;
+  after?: QueryDocumentSnapshot | null;
+  before?: QueryDocumentSnapshot | null;
+}): Promise<SignupPage> {
+  const { pageSize, after = null, before = null } = opts;
+  const base = collection(db, "users");
+
+  let snap;
+  if (before) {
+    snap = await getDocs(
+      query(
+        base,
+        orderBy("createdAt", "desc"),
+        endBefore(before),
+        limitToLast(pageSize),
+      ),
+    );
+  } else {
+    snap = await getDocs(
+      query(
+        base,
+        orderBy("createdAt", "desc"),
+        startAfter(after),
+        limit(pageSize),
+      ),
+    );
+  }
+
+  return {
+    users: snap.docs.map(mapSignupDoc),
+    next: snap.docs[snap.docs.length - 1] ?? null,
+    prev: snap.docs[0] ?? null,
+  };
 }
 
 export async function getAllAdminStats(): Promise<AdminStats> {
-  const [totalUsers, popularContent, countryBreakdown, recentSignups] =
-    await Promise.all([
-      getTotalUsers(),
-      getPopularContent(),
-      getCountryBreakdown(),
-      getRecentSignups(),
-    ]);
+  const [totalUsers, popularContent, countryBreakdown] = await Promise.all([
+    getTotalUsers(),
+    getPopularContent(),
+    getCountryBreakdown(),
+  ]);
   const totalWatches = popularContent.reduce((sum, item) => sum + item.count, 0);
-  return { totalUsers, totalWatches, popularContent, countryBreakdown, recentSignups };
+  return { totalUsers, totalWatches, popularContent, countryBreakdown };
 }
