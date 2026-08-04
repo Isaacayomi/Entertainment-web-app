@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   auth,
@@ -130,6 +130,41 @@ function LanguageSelect({
         </div>
       )}
     </div>
+  );
+}
+
+function StatIcon({ type }: { type: "watched" | "bookmarks" | "category" }) {
+  const common = {
+    xmlns: "http://www.w3.org/2000/svg",
+    width: "22",
+    height: "22",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+  } as const;
+  if (type === "bookmarks") {
+    return (
+      <svg {...common} className="text-red">
+        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+      </svg>
+    );
+  }
+  if (type === "category") {
+    return (
+      <svg {...common} className="text-red">
+        <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z" />
+        <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" />
+      </svg>
+    );
+  }
+  return (
+    <svg {...common} className="text-red">
+      <polygon points="23 7 16 12 23 17 23 7" />
+      <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+    </svg>
   );
 }
 
@@ -293,197 +328,258 @@ function Profile() {
       <SEO title="Profile" description="Manage your WòFlix account settings and preferences." />
       <Heading>{t("profile.heading")}</Heading>
 
-      <div className="mx-auto mt-8 max-w-2xl space-y-6">
-        {/* Profile Header */}
-        <section className="rounded-xl bg-semiDarkBlue p-6">
-          <div className="flex items-center gap-6">
-            <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-full border-2 border-white">
-              <img
-                src={auth.currentUser?.photoURL || "/assets/image-avatar.png"}
-                alt="Avatar"
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <div className="min-w-0 flex-1 overflow-hidden">
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                  className="min-w-0 flex-1 rounded-lg bg-white/10 px-3 py-2 text-lg font-semibold text-white outline-none focus:ring-2 focus:ring-white/30"
-                  placeholder="Your name"
+      <div className="mt-8 space-y-6">
+        {/* Profile Hero */}
+        <section className="rounded-2xl bg-semiDarkBlue p-6 md:p-8">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex items-center gap-5 md:gap-6">
+              <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-full border-2 border-white">
+                <img
+                  src={auth.currentUser?.photoURL || "/assets/image-avatar.png"}
+                  alt="Avatar"
+                  className="h-full w-full object-cover"
                 />
-                <button
-                  onClick={handleSaveName}
-                  disabled={savingName}
-                  className="flex h-9 w-9 items-center justify-center rounded-lg bg-red text-white hover:bg-red/80 disabled:opacity-50"
-                >
-                  {savingName ? (
-                    <SpinnerMini />
-                  ) : (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                  )}
-                </button>
               </div>
+              <div className="min-w-0 flex-1 overflow-hidden">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    className="min-w-0 flex-1 rounded-lg bg-white/10 px-3 py-2 text-lg font-semibold text-white outline-none focus:ring-2 focus:ring-white/30"
+                    placeholder="Your name"
+                  />
+                  <button
+                    onClick={handleSaveName}
+                    disabled={savingName}
+                    className="flex h-9 w-9 items-center justify-center rounded-lg bg-red text-white hover:bg-red/80 disabled:opacity-50"
+                  >
+                    {savingName ? (
+                      <SpinnerMini />
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
 
-              <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-grayishBlue">
-                <span className="truncate">{user.email}</span>
-                {user.emailVerified || verified ? (
-                  <span className="flex items-center gap-1 text-emerald-400">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                    </svg>
-                    {t("profile.verified")}
-                  </span>
-                ) : (
-                  <>
-                    <span className="text-yellow-400">{t("profile.notVerified")}</span>
-                    <button
-                      onClick={handleSendVerification}
-                      disabled={sendingVerification}
-                      className="text-xs text-red underline hover:text-red/80 disabled:opacity-50"
-                    >
-                      {sendingVerification ? t("profile.sending") : t("profile.resendVerification")}
-                    </button>
-                    <button
-                      onClick={handleRefreshVerification}
-                      disabled={refreshingVerification}
-                      className="text-xs text-grayishBlue underline hover:text-white disabled:opacity-50"
-                    >
-                      {refreshingVerification ? t("profile.refreshing") : t("profile.refreshStatus")}
-                    </button>
-                  </>
-                )}
+                <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-grayishBlue">
+                  <span className="truncate">{user.email}</span>
+                  {user.emailVerified || verified ? (
+                    <span className="flex items-center gap-1 text-emerald-400">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                      >
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                      </svg>
+                      {t("profile.verified")}
+                    </span>
+                  ) : (
+                    <>
+                      <span className="text-yellow-400">{t("profile.notVerified")}</span>
+                      <button
+                        onClick={handleSendVerification}
+                        disabled={sendingVerification}
+                        className="text-xs text-red underline hover:text-red/80 disabled:opacity-50"
+                      >
+                        {sendingVerification ? t("profile.sending") : t("profile.resendVerification")}
+                      </button>
+                      <button
+                        onClick={handleRefreshVerification}
+                        disabled={refreshingVerification}
+                        className="text-xs text-grayishBlue underline hover:text-white disabled:opacity-50"
+                      >
+                        {refreshingVerification ? t("profile.refreshing") : t("profile.refreshStatus")}
+                      </button>
+                    </>
+                  )}
+                </div>
+                <p className="mt-1 text-xs text-grayishBlue">
+                  {t("profile.memberSince", { date: memberSince })}
+                </p>
               </div>
-              <p className="mt-1 text-xs text-grayishBlue">
-                {t("profile.memberSince", { date: memberSince })}
-              </p>
+            </div>
+
+            <div className="flex shrink-0 flex-wrap items-center gap-3">
+              <Link
+                to="/history"
+                className="flex items-center gap-2 rounded-lg bg-white/10 px-4 py-2.5 text-sm font-medium transition-colors hover:bg-white/20"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M3 3v5h5" />
+                  <path d="M3.05 13A9 9 0 1 0 6 5.3L3 8" />
+                  <polyline points="12 7 12 12 17 12" />
+                </svg>
+                {t("profile.viewHistory")}
+              </Link>
+              <Link
+                to="/bookmarks"
+                className="flex items-center gap-2 rounded-lg bg-white/10 px-4 py-2.5 text-sm font-medium transition-colors hover:bg-white/20"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                </svg>
+                {t("profile.viewBookmarks")}
+              </Link>
             </div>
           </div>
         </section>
 
         {/* Stats */}
-        <section className="rounded-xl bg-semiDarkBlue p-6">
-          <h3 className="mb-4 text-lg font-semibold">{t("profile.statsTitle")}</h3>
+        <section className="grid gap-4 sm:grid-cols-3">
           {loadingStats ? (
-            <div className="flex h-16 items-center justify-center">
+            <div className="col-span-full flex h-24 items-center justify-center">
               <SpinnerMini />
             </div>
           ) : (
-            <div className="grid grid-cols-3 gap-4">
-              <div className="rounded-lg bg-white/5 p-3 text-center">
-                <p className="text-2xl font-bold text-red">{stats?.totalWatched ?? 0}</p>
-                <p className="mt-1 text-xs text-grayishBlue">{t("profile.watched")}</p>
+            <>
+              <div className="flex items-center gap-4 rounded-xl bg-semiDarkBlue p-5">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-red/15">
+                  <StatIcon type="watched" />
+                </span>
+                <div>
+                  <p className="text-2xl font-bold">{stats?.totalWatched ?? 0}</p>
+                  <p className="text-xs text-grayishBlue">{t("profile.watched")}</p>
+                </div>
               </div>
-              <div className="rounded-lg bg-white/5 p-3 text-center">
-                <p className="text-2xl font-bold text-red">{stats?.bookmarkCount ?? 0}</p>
-                <p className="mt-1 text-xs text-grayishBlue">{t("profile.bookmarks")}</p>
+              <div className="flex items-center gap-4 rounded-xl bg-semiDarkBlue p-5">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-red/15">
+                  <StatIcon type="bookmarks" />
+                </span>
+                <div>
+                  <p className="text-2xl font-bold">{stats?.bookmarkCount ?? 0}</p>
+                  <p className="text-xs text-grayishBlue">{t("profile.bookmarks")}</p>
+                </div>
               </div>
-              <div className="rounded-lg bg-white/5 p-3 text-center">
-                <p className="text-lg font-bold text-red capitalize">
-                  {stats?.favoriteGenre
-                    ? stats.favoriteGenre === "movie"
-                      ? t("profile.categoryMovie")
-                      : t("profile.categorySeries")
-                    : "—"}
-                </p>
-                <p className="mt-1 text-xs text-grayishBlue">{t("profile.topCategory")}</p>
+              <div className="flex items-center gap-4 rounded-xl bg-semiDarkBlue p-5">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-red/15">
+                  <StatIcon type="category" />
+                </span>
+                <div className="min-w-0">
+                  <p className="truncate text-2xl font-bold capitalize">
+                    {stats?.favoriteGenre
+                      ? stats.favoriteGenre === "movie"
+                        ? t("profile.categoryMovie")
+                        : t("profile.categorySeries")
+                      : "—"}
+                  </p>
+                  <p className="text-xs text-grayishBlue">{t("profile.topCategory")}</p>
+                </div>
               </div>
-            </div>
+            </>
           )}
         </section>
 
-        {/* Preferred Language */}
-        <section className="rounded-xl bg-semiDarkBlue p-6">
-          <h3 className="mb-4 text-lg font-semibold">{t("profile.languageTitle")}</h3>
-          <LanguageSelect
-            value={preferences.preferredLanguage}
-            onChange={(v) => {
-              updatePreferences({ preferredLanguage: v });
-              i18n.changeLanguage(v);
-              localStorage.setItem("language", v);
-            }}
-            disabled={savingPrefs}
-          />
-          <p className="mt-1.5 text-xs text-grayishBlue">
-            {t("profile.languageDesc")}
-          </p>
-        </section>
+        <div className="grid gap-6 lg:grid-cols-2">
+          {/* Preferred Language */}
+          <section className="rounded-xl bg-semiDarkBlue p-6">
+            <h3 className="mb-4 text-lg font-semibold">{t("profile.languageTitle")}</h3>
+            <LanguageSelect
+              value={preferences.preferredLanguage}
+              onChange={(v) => {
+                updatePreferences({ preferredLanguage: v });
+                i18n.changeLanguage(v);
+                localStorage.setItem("language", v);
+              }}
+              disabled={savingPrefs}
+            />
+            <p className="mt-1.5 text-xs text-grayishBlue">
+              {t("profile.languageDesc")}
+            </p>
+          </section>
 
-        {/* Security */}
-        <section className="rounded-xl bg-semiDarkBlue p-6">
-          <h3 className="mb-4 text-lg font-semibold">{t("profile.securityTitle")}</h3>
+          {/* Security */}
+          <section className="rounded-xl bg-semiDarkBlue p-6">
+            <h3 className="mb-4 text-lg font-semibold">{t("profile.securityTitle")}</h3>
 
-          {showPasswordForm ? (
-            <div className="space-y-3">
-              <input
-                type="password"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                placeholder={t("profile.currentPassword")}
-                className="w-full rounded-lg bg-white/10 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-white/30"
-              />
-              <input
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                placeholder={t("profile.newPassword")}
-                className="w-full rounded-lg bg-white/10 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-white/30"
-              />
-              <div className="flex gap-2">
-                <button
-                  onClick={handleChangePassword}
-                  disabled={savingPassword}
-                  className="rounded-lg bg-red px-4 py-2 text-sm font-medium hover:bg-red/80 disabled:opacity-50"
-                >
-                  {savingPassword ? <SpinnerMini /> : t("profile.savePassword")}
-                </button>
-                <button
-                  onClick={() => {
-                    setShowPasswordForm(false);
-                    setCurrentPassword("");
-                    setNewPassword("");
-                  }}
-                  className="rounded-lg bg-white/10 px-4 py-2 text-sm hover:bg-white/20"
-                >
-                  {t("profile.cancel")}
-                </button>
+            {showPasswordForm ? (
+              <div className="space-y-3">
+                <input
+                  type="password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  placeholder={t("profile.currentPassword")}
+                  className="w-full rounded-lg bg-white/10 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-white/30"
+                />
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder={t("profile.newPassword")}
+                  className="w-full rounded-lg bg-white/10 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-white/30"
+                />
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleChangePassword}
+                    disabled={savingPassword}
+                    className="rounded-lg bg-red px-4 py-2 text-sm font-medium hover:bg-red/80 disabled:opacity-50"
+                  >
+                    {savingPassword ? <SpinnerMini /> : t("profile.savePassword")}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowPasswordForm(false);
+                      setCurrentPassword("");
+                      setNewPassword("");
+                    }}
+                    className="rounded-lg bg-white/10 px-4 py-2 text-sm hover:bg-white/20"
+                  >
+                    {t("profile.cancel")}
+                  </button>
+                </div>
               </div>
-            </div>
-          ) : (
-            <button
-              onClick={() => setShowPasswordForm(true)}
-              className="rounded-lg bg-white/10 px-4 py-2 text-sm hover:bg-white/20"
-            >
-              {t("profile.changePassword")}
-            </button>
-          )}
-        </section>
+            ) : (
+              <button
+                onClick={() => setShowPasswordForm(true)}
+                className="rounded-lg bg-white/10 px-4 py-2 text-sm hover:bg-white/20"
+              >
+                {t("profile.changePassword")}
+              </button>
+            )}
+          </section>
+        </div>
 
         {/* Danger Zone */}
         <section className="rounded-xl border border-red/30 bg-semiDarkBlue p-6">
           <h3 className="mb-4 text-lg font-semibold text-red">{t("profile.dangerZone")}</h3>
           <div className="space-y-4">
             {/* Sign Out */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <p className="text-sm font-medium">{t("profile.signOutLabel")}</p>
                 <p className="text-xs text-grayishBlue">
@@ -502,7 +598,7 @@ function Profile() {
             <hr className="border-white/10" />
 
             {/* Clear Watch History */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <p className="text-sm font-medium">{t("profile.clearHistoryLabel")}</p>
                 <p className="text-xs text-grayishBlue">
@@ -521,7 +617,7 @@ function Profile() {
             <hr className="border-white/10" />
 
             {/* Delete Account */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <p className="text-sm font-medium text-red">{t("profile.deleteAccountLabel")}</p>
                 <p className="text-xs text-grayishBlue">
@@ -529,7 +625,7 @@ function Profile() {
                 </p>
               </div>
               {showDeleteConfirm ? (
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <input
                     type="password"
                     value={deletePassword}

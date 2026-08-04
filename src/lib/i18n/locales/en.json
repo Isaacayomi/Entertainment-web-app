@@ -145,6 +145,8 @@
     "watched": "Watched",
     "bookmarks": "Bookmarks",
     "topCategory": "Top Category",
+    "viewHistory": "View history",
+    "viewBookmarks": "View bookmarks",
     "languageTitle": "Language",
     "languageDesc": "Used for content recommendations and browse filters.",
     "selectLanguage": "Select language",
