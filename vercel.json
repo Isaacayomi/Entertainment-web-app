@@ -12,6 +12,14 @@
   ],
   "rewrites": [
     {
+      "source": "/__/auth/(.*)",
+      "destination": "https://woflix-16c4a.firebaseapp.com/__/auth/$1"
+    },
+    {
+      "source": "/__/firebase/(.*)",
+      "destination": "https://woflix-16c4a.firebaseapp.com/__/firebase/$1"
+    },
+    {
       "source": "/api/tmdb/(.*)",
       "destination": "/api/tmdb-proxy?tmdbPath=$1"
     },

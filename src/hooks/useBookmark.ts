@@ -36,6 +36,7 @@ export function useBookmark(movie: Movie) {
     onError: (err: Error) => {
       toast.error("Bookmark update failed. Try again.");
       setBookmarked(isBookmarked);
+      console.error(err);
     },
   });
 
