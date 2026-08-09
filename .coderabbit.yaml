@@ -1,0 +1,21 @@
+language: en
+reviews:
+  profile: chill
+  request_changes_workflow: false
+  poem: false
+  high_level_summary: true
+  review_status: true
+  collapse_walkthrough: false
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - main
+chat:
+  auto_reply: true
+lint:
+  secrets: true
+  markdown: false
+  shellcheck: false
+  spelling: false
+  yamllint: false
