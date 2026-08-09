@@ -2,7 +2,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense, useEffect, Component, type ReactNode } from "react";
 import { HelmetProvider } from "react-helmet-async";
 import AppLayout from "./ui/AppLayout";
+import ProtectedRoute from "./ui/ProtectedRoute";
 import Spinner from "./ui/Spinner";
+import { AuthGateProvider } from "./ui/AuthGateProvider";
 import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "react-hot-toast";
@@ -96,12 +98,13 @@ function App() {
         <LanguageChangeHandler />
         <ErrorBoundary>
         <Suspense fallback={<Spinner />}>
+        <AuthGateProvider>
         <Routes>
           <Route element={<AppLayout />}>
             <Route element={<Home />} path="/" />
             <Route element={<Movies />} path="movies" />
             <Route element={<Series />} path="series" />
-            <Route element={<Bookmark />} path="bookmarks" />
+            <Route element={<ProtectedRoute><Bookmark /></ProtectedRoute>} path="bookmarks" />
             <Route element={<CategoriesPage />} path="categories" />
             <Route element={<CategoryResults />} path="categories/:genreId" />
             <Route element={<DecadeResults />} path="browse/decade/:year" />
@@ -110,14 +113,15 @@ function App() {
             <Route element={<CollectionPage />} path="collection/:id" />
             <Route element={<DetailPage />} path="movie/:id" />
             <Route element={<DetailPage />} path="tv/:id" />
-            <Route element={<History />} path="history" />
-            <Route element={<Profile />} path="profile" />
-            <Route element={<Admin />} path="admin" />
+            <Route element={<ProtectedRoute><History /></ProtectedRoute>} path="history" />
+            <Route element={<ProtectedRoute><Profile /></ProtectedRoute>} path="profile" />
+            <Route element={<ProtectedRoute><Admin /></ProtectedRoute>} path="admin" />
           </Route>
           <Route element={<Login />} path="login" />
           <Route element={<SignUp />} path="sign-up" />
           <Route element={<PageNotFound />} path="*" />
         </Routes>
+        </AuthGateProvider>
         </Suspense>
         </ErrorBoundary>
       </BrowserRouter>

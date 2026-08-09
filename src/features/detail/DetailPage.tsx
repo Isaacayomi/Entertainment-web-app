@@ -9,8 +9,11 @@ import { useVideos } from "../../hooks/useVideos";
 import { useCredits } from "../../hooks/useCredits";
 import { useSimilar } from "../../hooks/useSimilar";
 import { useRecommendations } from "../../hooks/useRecommendations";
+import { useUser } from "../../hooks/useUser";
+import { useAuthGate } from "../../hooks/useAuthGate";
 import { imageUrl } from "../../lib/tmdb";
 import { isUnreleased } from "../../lib/releaseStatus";
+import { auth } from "../../lib/firebase";
 import { updateWatchProgress } from "../../services/apiWatchHistory";
 import { updateBookmark } from "../../services/apiUpdateBookmark";
 import { getBookmark } from "../../services/apiBookmark";
@@ -50,6 +53,8 @@ function DetailPage() {
     isPending: ratingPending,
   } = useRating(tmdbId);
   const navigate = useNavigate();
+  const { requireAuth } = useAuthGate();
+  const { isAuthenticated, isPending: authPending } = useUser();
 
   const searchParams = new URLSearchParams(location.search);
 
@@ -82,8 +87,9 @@ function DetailPage() {
     133701: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
   };
 
+  const wantsPlay = searchParams.get("play") === "1";
   const [mode, setMode] = useState<"hero" | "watch">(
-    searchParams.get("play") === "1" ? "watch" : "hero",
+    wantsPlay && auth.currentUser ? "watch" : "hero",
   );
   const [season, setSeason] = useState(
     Number(searchParams.get("season")) || 1,
@@ -93,6 +99,15 @@ function DetailPage() {
   );
   const [muted, setMuted] = useState(false);
   const trailerIframeRef = useRef<HTMLIFrameElement>(null);
+
+  useEffect(() => {
+    if (!wantsPlay || authPending) return;
+    if (isAuthenticated) {
+      setMode("watch");
+    } else {
+      requireAuth("watch this title");
+    }
+  }, [wantsPlay, authPending, isAuthenticated, requireAuth]);
 
   const [watchEntry, setWatchEntry] = useState<{ progress: number } | null>(null);
   const [demoMode, setDemoMode] = useState(false);
@@ -114,6 +129,7 @@ function DetailPage() {
 
   const toggleBookmark = async () => {
     if (bookmarkPending) return;
+    if (!requireAuth("bookmark this title")) return;
     setBookmarkPending(true);
     const newValue = !isBookmarked;
     setIsBookmarked(newValue);
@@ -162,6 +178,7 @@ function DetailPage() {
   ) ?? [];
 
   const handleSelectEpisode = (ep: { episode_number: number }) => {
+    if (!requireAuth("watch this episode")) return;
     setEpisode(ep.episode_number);
     updateWatchProgress(tmdbId, {
       title,
@@ -330,14 +347,18 @@ function DetailPage() {
             <span className="mr-3 text-xs text-white/50">{t("detail.yourRating")}</span>
             <StarRating
               rating={userRating}
-              onRate={(r) =>
+              onRate={(r) => {
+                if (!requireAuth("rate this title")) return;
                 setUserRating({
                   rating: r,
                   title,
                   posterPath: detail.poster_path,
-                })
-              }
-              onRemove={removeUserRating}
+                });
+              }}
+              onRemove={() => {
+                if (!requireAuth("rate this title")) return;
+                removeUserRating();
+              }}
               disabled={ratingPending}
             />
           </div>
@@ -366,6 +387,7 @@ function DetailPage() {
             ) : (
               <button
                 onClick={() => {
+                  if (!requireAuth("watch this title")) return;
                   updateWatchProgress(tmdbId, {
                     title,
                     category: mediaType === "movie" ? "movie" : "tv series",
@@ -467,7 +489,10 @@ function DetailPage() {
             {/* Watch Demo */}
             {DEMO_SOURCES[tmdbId] && (
               <button
-                onClick={() => setDemoMode(true)}
+                onClick={() => {
+                  if (!requireAuth("watch the demo")) return;
+                  setDemoMode(true);
+                }}
                 className="flex items-center gap-2 rounded-full border border-red/50 px-6 py-3 text-sm text-red hover:bg-red/10"
               >
                 <svg
@@ -487,6 +512,7 @@ function DetailPage() {
             {!unreleased && (
               <button
                 onClick={() => {
+                  if (!requireAuth("mark this as watched")) return;
                   updateWatchProgress(tmdbId, {
                     title,
                     category: mediaType === "movie" ? "movie" : "tv series",

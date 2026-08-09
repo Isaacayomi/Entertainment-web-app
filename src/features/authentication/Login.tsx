@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useLogin } from "../../hooks/useLogin";
 import { useGoogleLogin } from "../../hooks/useGoogleLogin";
 import { useUser } from "../../hooks/useUser";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { AuthProps } from "types";
 
 import AuthLayout from "./AuthLayout";
@@ -17,25 +17,32 @@ import toast from "react-hot-toast";
 import { handleRedirectResult } from "../../services/apiAuth";
 import { trackUserCountry } from "../../services/apiGeolocation";
 import { getGoogleAuthErrorMessage } from "../../hooks/useGoogleLogin";
+import { getAuthReturnTo, clearAuthReturnTo } from "../../services/authReturn";
 
 function Login() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { isAuthenticated, isPending: authPending } = useUser();
 
+  const redirectAfterAuth = useCallback(() => {
+    const target = getAuthReturnTo() ?? "/";
+    clearAuthReturnTo();
+    navigate(target, { replace: true });
+  }, [navigate]);
+
   useEffect(() => {
     handleRedirectResult()
       .then((result) => {
         if (result) {
           trackUserCountry();
-          navigate("/", { replace: true });
+          redirectAfterAuth();
           toast.success("Logged in successfully");
         }
       })
       .catch((error) => {
         toast.error(getGoogleAuthErrorMessage(error));
       });
-  }, [navigate]);
+  }, [redirectAfterAuth]);
 
   useEffect(() => {
     if (!authPending && isAuthenticated) {
@@ -58,7 +65,7 @@ function Login() {
       {
         onSuccess: () => {
           trackUserCountry();
-          navigate("/", { replace: true });
+          redirectAfterAuth();
           toast.success("Logged in successfully");
         },
         onError: () => {

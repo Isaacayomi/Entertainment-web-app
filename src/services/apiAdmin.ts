@@ -33,6 +33,7 @@ export type SignupPage = {
   users: SignupUser[];
   next: QueryDocumentSnapshot | null;
   prev: QueryDocumentSnapshot | null;
+  hasMore: boolean;
 };
 
 export async function isAdmin(): Promise<boolean> {
@@ -118,30 +119,39 @@ export async function getSignupsPage(opts: {
   const base = collection(db, "users");
 
   let snap;
+  let docs: QueryDocumentSnapshot[];
   if (before) {
     snap = await getDocs(
       query(
         base,
         orderBy("createdAt", "desc"),
         endBefore(before),
-        limitToLast(pageSize),
+        limitToLast(pageSize + 1),
       ),
     );
-  } else {
+    docs = snap.docs.slice(snap.docs.length - pageSize);
+  } else if (after) {
     snap = await getDocs(
       query(
         base,
         orderBy("createdAt", "desc"),
         startAfter(after),
-        limit(pageSize),
+        limit(pageSize + 1),
       ),
     );
+    docs = snap.docs.slice(0, pageSize);
+  } else {
+    snap = await getDocs(
+      query(base, orderBy("createdAt", "desc"), limit(pageSize + 1)),
+    );
+    docs = snap.docs.slice(0, pageSize);
   }
 
   return {
-    users: snap.docs.map(mapSignupDoc),
-    next: snap.docs[snap.docs.length - 1] ?? null,
-    prev: snap.docs[0] ?? null,
+    users: docs.map(mapSignupDoc),
+    next: docs[docs.length - 1] ?? null,
+    prev: docs[0] ?? null,
+    hasMore: snap.docs.length > pageSize,
   };
 }
 

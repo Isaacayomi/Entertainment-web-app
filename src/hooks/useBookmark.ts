@@ -2,11 +2,13 @@ import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { updateBookmark } from "../services/apiUpdateBookmark";
+import { useAuthGate } from "./useAuthGate";
 import type { Movie } from "types";
 
 export function useBookmark(movie: Movie) {
   const { title, isBookmarked, id } = movie;
   const mediaType = movie.category === "movie" ? "movie" : "tv";
+  const { requireAuth } = useAuthGate();
 
   const [bookmarked, setBookmarked] = useState<boolean>(isBookmarked);
 
@@ -41,6 +43,7 @@ export function useBookmark(movie: Movie) {
   });
 
   function handleClick() {
+    if (!requireAuth("bookmark this title")) return;
     const newValue = !bookmarked;
     setBookmarked(newValue);
 

@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSignUp } from "../../hooks/useSignUp";
 import { useGoogleLogin } from "../../hooks/useGoogleLogin";
 import { useUser } from "../../hooks/useUser";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { AuthProps } from "types";
@@ -17,25 +17,32 @@ import toast from "react-hot-toast";
 import { handleRedirectResult } from "../../services/apiAuth";
 import { trackUserCountry } from "../../services/apiGeolocation";
 import { getGoogleAuthErrorMessage } from "../../hooks/useGoogleLogin";
+import { getAuthReturnTo, clearAuthReturnTo } from "../../services/authReturn";
 
 function SignUp() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { isAuthenticated, isPending: authPending } = useUser();
 
+  const redirectAfterAuth = useCallback(() => {
+    const target = getAuthReturnTo() ?? "/";
+    clearAuthReturnTo();
+    navigate(target, { replace: true });
+  }, [navigate]);
+
   useEffect(() => {
     handleRedirectResult()
       .then((result) => {
         if (result) {
           trackUserCountry();
-          navigate("/", { replace: true });
+          redirectAfterAuth();
           toast.success("Logged in successfully");
         }
       })
       .catch((error) => {
         toast.error(getGoogleAuthErrorMessage(error));
       });
-  }, [navigate]);
+  }, [redirectAfterAuth]);
 
   useEffect(() => {
     if (!authPending && isAuthenticated) {
@@ -61,7 +68,7 @@ function SignUp() {
         onSuccess: () => {
           toast.success("Account created successfully");
           trackUserCountry();
-          navigate("/login");
+          redirectAfterAuth();
         },
         onError: () => {
           setError("password", {

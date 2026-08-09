@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
+import { lockScroll, unlockScroll } from "../lib/lenis";
 
 const SUBTITLE_LANGUAGES = [
   { code: "en", label: "English" },
@@ -76,8 +77,10 @@ export default function CustomVideoPlayer({
     };
     document.addEventListener("keydown", handleKey);
     document.body.style.overflow = "hidden";
+    lockScroll();
     return () => {
       document.removeEventListener("keydown", handleKey);
+      unlockScroll();
       document.body.style.overflow = "";
     };
   }, [onClose]);
