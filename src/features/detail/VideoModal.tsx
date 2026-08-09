@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { lockScroll, unlockScroll } from "../../lib/lenis";
 
 type VideoModalProps = {
   url: string;
@@ -16,8 +17,10 @@ function VideoModal({ url, title, onClose }: VideoModalProps) {
     };
     document.addEventListener("keydown", handleKey);
     document.body.style.overflow = "hidden";
+    lockScroll();
     return () => {
       document.removeEventListener("keydown", handleKey);
+      unlockScroll();
       document.body.style.overflow = "";
     };
   }, [onClose]);

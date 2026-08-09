@@ -14,12 +14,14 @@ import { useLogout } from "../hooks/useLogout";
 import { useUser } from "../hooks/useUser";
 import { auth } from "../lib/firebase";
 import { setAuthReturnTo } from "../services/authReturn";
+import { mountLenis, unmountLenis, getLenis, scrollToTop } from "../lib/lenis";
 
 function AppLayout() {
   const { t } = useTranslation();
   const { pathname, search } = useLocation();
   const navigate = useNavigate();
   const mainRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const isDetailRoute = pathname.match(/^\/(movie|tv)\/\d+$/);
   const isHome = pathname === "/";
@@ -27,12 +29,25 @@ function AppLayout() {
   const isProfile = pathname === "/profile";
 
   useEffect(() => {
+    if (getLenis()) {
+      scrollToTop(true);
+      return;
+    }
     if (isDetailRoute) {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     } else {
       mainRef.current?.scrollTo({ top: 0, left: 0, behavior: "auto" });
     }
   }, [pathname, isDetailRoute]);
+
+  useEffect(() => {
+    if (isDetailRoute) {
+      mountLenis();
+    } else if (mainRef.current && contentRef.current) {
+      mountLenis(mainRef.current, contentRef.current);
+    }
+    return unmountLenis;
+  }, [isDetailRoute]);
 
   const { logout, isPending: logoutPending } = useLogout();
   const { isAuthenticated } = useUser();
@@ -212,19 +227,21 @@ function AppLayout() {
 
             <main
               ref={mainRef}
-              className="min-h-0 flex-1 overflow-y-auto scrollbar-hide bg-darkBlue"
+              className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain scrollbar-hide bg-darkBlue"
             >
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={pathname}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.25 }}
-                >
-                  <Outlet />
-                </motion.div>
-              </AnimatePresence>
+              <div ref={contentRef} className="min-h-full">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={pathname}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.25 }}
+                  >
+                    <Outlet />
+                  </motion.div>
+                </AnimatePresence>
+              </div>
             </main>
           </div>
         </div>

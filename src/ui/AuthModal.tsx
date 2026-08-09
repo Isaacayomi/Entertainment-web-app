@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { lockScroll, unlockScroll } from "../lib/lenis";
 
 type AuthModalProps = {
   open: boolean;
@@ -15,8 +16,10 @@ function AuthModal({ open, action, onClose, onLogin }: AuthModalProps) {
     };
     document.addEventListener("keydown", handleKey);
     document.body.style.overflow = "hidden";
+    lockScroll();
     return () => {
       document.removeEventListener("keydown", handleKey);
+      unlockScroll();
       document.body.style.overflow = "";
     };
   }, [open, onClose]);

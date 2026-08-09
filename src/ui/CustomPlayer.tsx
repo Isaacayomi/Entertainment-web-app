@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
+import { lockScroll, unlockScroll } from "../lib/lenis";
 import { Plyr, APITypes, PlyrOptions } from "plyr-react";
 import "plyr-react/plyr.css";
 
@@ -70,8 +71,10 @@ export default function CustomPlayer({
     };
     document.addEventListener("keydown", handleKey);
     document.body.style.overflow = "hidden";
+    lockScroll();
     return () => {
       document.removeEventListener("keydown", handleKey);
+      unlockScroll();
       document.body.style.overflow = "";
     };
   }, [onClose]);
